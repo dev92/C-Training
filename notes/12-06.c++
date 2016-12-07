@@ -46,3 +46,55 @@ int m = (i <<= 3);
 // 5 16 8 4 2 1
 // cycle length of 5  is 6
 // cycle length of 10 is 7
+
+// 1. run it as is, confirm success
+// 2. identify and fix the broken tests, confirm failure
+// 3. fix the code, confirm success
+
+int i = 2;
+int j = ++i;
+int k = i++;
+
+// ++i returns i AFTER  incrementing
+// i++ returns i BEFORE incrementing
+
+++i;
+i++;
+
+for (I i = 0; ...; ++i)
+    ...
+
+int i = 0;
+while ... {
+   ...
+   ++i;}
+
+++++i;        // C, Java, not ok, C++, ok
+cout << &++i; // ok
+
+++(i++);        // not ok
+cout << &(i++); // not ok
+
+j = ++(i++); // not ok
+
+++2 // ok
+2++ // not ok
+
+cout << &(i + j); // not ok
+++(i + j);        // not ok
+
+int f (...) {
+    ...
+    if (<something wrong>) {
+	    throw E2(...);}
+            ...}
+
+int g (...) {
+    ...
+    try {
+    	...
+    	int i = f(...);
+	    ...}
+    catch (E e)
+    	<something wrong>
+    ...}
