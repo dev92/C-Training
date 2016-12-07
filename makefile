@@ -126,10 +126,12 @@ sync:
     --include "IsPrime1.c++"                \
     --include "IsPrime2.c++"                \
     --include "Incr.c++"                    \
+    --include "Incr.h"                      \
     --include "Equal.c++"                   \
     --exclude "*"                           \
     ../../../exercises/c++/ exercises
 
+#    --include "Iterators.c++"               \
 #    --include "Arrays.c++"                  \
 #    --include "LocalVariables.c++"          \
 #    --include "GlobalVariables.c++"         \
