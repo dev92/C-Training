@@ -117,8 +117,9 @@ sync:
     --include "Coverage3.c++"               \
     --include "Exceptions.c++"              \
     --include "Variables.c++"               \
-    --include "Types.c++"                   \
     --include "Operators.c++"               \
+    --include "Arguments.c++"               \
+    --include "Consts.c++"                  \
     --exclude "*"                           \
     ../../../examples/c++/ examples
 	@rsync -r -t -u -v --delete             \
@@ -129,8 +130,6 @@ sync:
     --exclude "*"                           \
     ../../../exercises/c++/ exercises
 
-#    --include "Arguments.c++"               \
-#    --include "Consts.c++"                  \
 #    --include "Arrays.c++"                  \
 #    --include "LocalVariables.c++"          \
 #    --include "GlobalVariables.c++"         \
