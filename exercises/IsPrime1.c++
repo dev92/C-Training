@@ -8,6 +8,8 @@
 #include <cmath>    // sqrt
 #include <iostream> // cout, endl
 
+using namespace std;
+
 bool is_prime (int n) {
     assert(n > 0);
     if ((n == 1) || ((n % 2) == 0))
