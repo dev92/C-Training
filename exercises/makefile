@@ -57,6 +57,16 @@ else                                                                    # UTCS
     CLANG-FORMAT := clang-format-3.8
 endif
 
+IsPrime1.app: IsPrime1.c++
+	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) $< -o $@ $(LDFLAGS)
+	-$(CLANG-CHECK) -extra-arg=-std=c++11          $< --
+	-$(CLANG-CHECK) -extra-arg=-std=c++11 -analyze $< --
+
+IsPrime2.app: IsPrime2.c++
+	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) $< -o $@ $(LDFLAGS)
+	-$(CLANG-CHECK) -extra-arg=-std=c++11          $< --
+	-$(CLANG-CHECK) -extra-arg=-std=c++11 -analyze $< --
+
 %.app: %.c++ %.h
 	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) $< -o $@ $(LDFLAGS)
 	-$(CLANG-CHECK) -extra-arg=-std=c++11          $< --

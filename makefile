@@ -123,9 +123,7 @@ sync:
     ../../../examples/c++/ examples
 	@rsync -r -t -u -v --delete             \
     --include "IsPrime1.c++"                \
-    --include "IsPrime1.h"                  \
     --include "IsPrime2.c++"                \
-    --include "IsPrime2.h"                  \
     --include "Incr.c++"                    \
     --include "Equal.c++"                   \
     --exclude "*"                           \
@@ -142,8 +140,6 @@ sync:
 #    --include "MethodOverriding1.c++"       \
 #    --include "MethodOverriding2.c++"       \
 #
-#    --include "IsPrime1.h"                  \
-#    --include "IsPrime2.h"                  \
 #    --include "Incr.h"                      \
 #    --include "Equal.h"                     \
 #    --include "Copy.c++"                    \

@@ -4,64 +4,48 @@
 
 // https://en.wikipedia.org/wiki/Primality_test
 
-#include "gtest/gtest.h"
+#include <cassert>  // assert
+#include <cmath>    // sqrt
+#include <iostream> // cout, endl
 
-#include "IsPrime2.h"
+using namespace std;
 
-TEST(IsPrimeFixture, test_1) {
-    ASSERT_FALSE(is_prime( 1));}
+bool is_prime (int n) {
+    assert(n > 0);
+    if (n == 2)
+        return true;
+    if ((n == 1) || ((n % 2) == 0))
+        return false;
+    for (int i = 3; i <= std::sqrt(n); i += 2)
+        if ((n % i) == 0)
+            return false;
+    return true;}
 
-TEST(IsPrimeFixture, test_2) {
-    ASSERT_TRUE(is_prime( 2));}
+int main () {
+    cout << "IsPrime2.c++" << endl;
 
-TEST(IsPrimeFixture, test_3) {
-    ASSERT_TRUE(is_prime( 3));}
+    assert(!is_prime( 1));
+    assert( is_prime( 2));
+    assert( is_prime( 3));
+    assert(!is_prime( 4));
+    assert( is_prime( 5));
+    assert( is_prime( 7));
+    assert(!is_prime( 9));
+    assert(!is_prime(27));
+    assert( is_prime(29));
 
-TEST(IsPrimeFixture, test_4) {
-    ASSERT_FALSE(is_prime( 4));}
-
-TEST(IsPrimeFixture, test_5) {
-    ASSERT_TRUE(is_prime( 5));}
-
-TEST(IsPrimeFixture, test_7) {
-    ASSERT_TRUE(is_prime( 7));}
-
-TEST(IsPrimeFixture, test_9) {
-    ASSERT_FALSE(is_prime( 9));}
-
-TEST(IsPrimeFixture, test_27) {
-    ASSERT_FALSE(is_prime(27));}
-
-TEST(IsPrimeFixture, test_29) {
-    ASSERT_TRUE(is_prime(29));}
+    cout << "Done." << endl;
+    return 0;}
 
 /*
 % IsPrime2
-Running main() from gtest_main.cc
-[==========] Running 9 tests from 1 test case.
-[----------] Global test environment set-up.
-[----------] 9 tests from IsPrimeFixture
-[ RUN      ] IsPrimeFixture.test_1
-[       OK ] IsPrimeFixture.test_1 (0 ms)
-[ RUN      ] IsPrimeFixture.test_2
-[       OK ] IsPrimeFixture.test_2 (0 ms)
-[ RUN      ] IsPrimeFixture.test_3
-[       OK ] IsPrimeFixture.test_3 (0 ms)
-[ RUN      ] IsPrimeFixture.test_4
-[       OK ] IsPrimeFixture.test_4 (0 ms)
-[ RUN      ] IsPrimeFixture.test_5
-[       OK ] IsPrimeFixture.test_5 (0 ms)
-[ RUN      ] IsPrimeFixture.test_7
-[       OK ] IsPrimeFixture.test_7 (0 ms)
-[ RUN      ] IsPrimeFixture.test_9
-[       OK ] IsPrimeFixture.test_9 (0 ms)
-[ RUN      ] IsPrimeFixture.test_27
-[       OK ] IsPrimeFixture.test_27 (0 ms)
-[ RUN      ] IsPrimeFixture.test_29
-[       OK ] IsPrimeFixture.test_29 (0 ms)
-[----------] 9 tests from IsPrimeFixture (0 ms total)
-
-[----------] Global test environment tear-down
-[==========] 9 tests from 1 test case ran. (1 ms total)
-[  PASSED  ] 9 tests.
+IsPrime2.c++
+Done.
+gcov -b IsPrime2.c++ | grep -A 5 "File 'IsPrime2.c++'"
+File 'IsPrime2.c++'
+Lines executed:100.00% of 21
+Branches executed:100.00% of 30
+Taken at least once:66.67% of 30
+No calls
+IsPrime2.c++:creating 'IsPrime2.c++.gcov'
 */
