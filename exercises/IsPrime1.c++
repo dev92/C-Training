@@ -7,8 +7,6 @@
 #include <cassert>  // assert
 #include <cmath>    // sqrt
 
-#include "gtest/gtest.h"
-
 bool is_prime (int n) {
     assert(n > 0);
     if ((n == 1) || ((n % 2) == 0))
