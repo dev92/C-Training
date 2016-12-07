@@ -6,6 +6,7 @@
 
 #include <cassert>  // assert
 #include <cmath>    // sqrt
+#include <iostream> // cout, endl
 
 bool is_prime (int n) {
     assert(n > 0);
@@ -17,6 +18,8 @@ bool is_prime (int n) {
     return true;}
 
 int main () {
+    cout << "IsPrime1.c++" << endl;
+
     assert(!is_prime( 1));
     assert(!is_prime( 2));
     assert(is_prime( 3));
@@ -26,6 +29,8 @@ int main () {
     assert(is_prime( 9));
     assert(!is_prime(27));
     assert(is_prime(29));
+
+    cout << "Done." << endl;
     return 0;}
 
 /*
