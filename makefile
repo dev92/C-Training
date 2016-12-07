@@ -112,6 +112,9 @@ sync:
     --include "UnitTests1.c++"              \
     --include "UnitTests2.c++"              \
     --include "UnitTests3.c++"              \
+    --include "Coverage1.c++"               \
+    --include "Coverage2.c++"               \
+    --include "Coverage3.c++"               \
     --include "Exceptions.c++"              \
     --include "Variables.c++"               \
     --include "Types.c++"                   \
