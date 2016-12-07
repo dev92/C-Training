@@ -123,6 +123,7 @@ sync:
     ../../../examples/c++/ examples
 	@rsync -r -t -u -v --delete             \
     --include "IsPrime1.c++"                \
+    --include "IsPrime1.h"                  \
     --include "IsPrime2.c++"                \
     --include "Incr.c++"                    \
     --include "Equal.c++"                   \
