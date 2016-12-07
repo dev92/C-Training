@@ -24,13 +24,13 @@ int cycle_length (int n) {
     return c;}
 
 TEST(UnitTestsFixture, test_1) {
-    ASSERT_EQ(cycle_length( 1), 1);}
+    ASSERT_EQ(1, cycle_length( 1));}
 
 TEST(UnitTestsFixture, test_2) {
-    ASSERT_EQ(cycle_length( 5), 5);}
+    ASSERT_EQ(5, cycle_length( 5));}
 
 TEST(UnitTestsFixture, test_3) {
-    ASSERT_EQ(cycle_length(10), 7);}
+    ASSERT_EQ(7, cycle_length(10));}
 
 /*
 % g++ -pedantic -std=c++11 -Wall UnitTests2.c++ -o UnitTests2 -lgtest -lgtest_main -pthread
