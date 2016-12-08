@@ -133,6 +133,7 @@ sync:
     --include "Copy.c++"                    \
     --include "Fill.c++"                    \
     --include "Vector1.c++"                 \
+    --include "Vector1.h"                 \
     --include "Vector2.c++"                 \
     --exclude "*"                           \
     ../../../exercises/c++/ exercises
