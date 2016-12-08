@@ -1,11 +1,10 @@
 .DEFAULT_GOAL := test
 
 FILES :=          \
-    IsPrime1
-
-#    IsPrime2      \
-#    Incr          \
-#    Equal
+    IsPrime1      \
+    IsPrime2      \
+    Incr          \
+    Equal
 
 ifeq ($(shell uname), Darwin)                                           # Apple
     CXX          := g++

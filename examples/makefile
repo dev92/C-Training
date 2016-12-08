@@ -9,7 +9,10 @@ FILES :=                \
     Exceptions          \
     Variables           \
     Types               \
-    Operators
+    Operators           \
+    Iterators           \
+    Consts              \
+    Arrays
 
 ifeq ($(shell uname), Darwin)                                           # Apple
     CXX          := g++

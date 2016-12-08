@@ -118,8 +118,9 @@ sync:
     --include "Exceptions.c++"              \
     --include "Variables.c++"               \
     --include "Operators.c++"               \
-    --include "Arguments.c++"               \
+    --include "Iterators.c++"               \
     --include "Consts.c++"                  \
+    --include "Arrays.c++"                  \
     --exclude "*"                           \
     ../../../examples/c++/ examples
 	@rsync -r -t -u -v --delete             \
@@ -127,12 +128,13 @@ sync:
     --include "IsPrime2.c++"                \
     --include "Incr.c++"                    \
     --include "Incr.h"                      \
+    --include "Equal.h"                     \
     --include "Equal.c++"                   \
+    --include "Copy.c++"                    \
+    --include "Fill.c++"                    \
     --exclude "*"                           \
     ../../../exercises/c++/ exercises
 
-#    --include "Iterators.c++"               \
-#    --include "Arrays.c++"                  \
 #    --include "LocalVariables.c++"          \
 #    --include "GlobalVariables.c++"         \
 #    --include "ClassVariables.c++"          \
@@ -141,11 +143,7 @@ sync:
 #    --include "MethodOverriding1.c++"       \
 #    --include "MethodOverriding2.c++"       \
 #
-#    --include "Incr.h"                      \
-#    --include "Equal.h"                     \
-#    --include "Copy.c++"                    \
 #    --include "Copy.h"                      \
-#    --include "Fill.c++"                    \
 #    --include "Fill.h"                      \
 #    --include "Vector1.c++"                 \
 #    --include "Vector1.h"                   \
