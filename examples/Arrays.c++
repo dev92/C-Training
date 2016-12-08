@@ -163,12 +163,6 @@ int main () {
     }
 
     {
-//  B a[] = {A(), A(), A()};    // error: conversion from "A" to non-scalar type "B" requested
-    A a[] = {B(), B(), B()};    // slice
-    assert(a[1].f() == "A::f");
-    }
-
-    {
 //  B* const a = new A[10];     // error: invalid conversion from ‘A*’ to ‘B*’
     A* const a = new B[10];     // dangerous
     assert(a[0].f() == "A::f");
@@ -192,10 +186,6 @@ int main () {
     x = z;
     assert( x    ==  z);
     assert(&x[1] != &z[1]);
-    }
-
-    {
-//  vector<A>* const p = new vector<B>; // error: cannot convert 'vector<B, allocator<B> >*' to 'vector<A, allocator<A> >* const' in initialization
     }
 
     cout << "Done." << endl;

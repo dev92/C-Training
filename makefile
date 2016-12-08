@@ -121,6 +121,8 @@ sync:
     --include "Iterators.c++"               \
     --include "Consts.c++"                  \
     --include "Arrays.c++"                  \
+    --include "Vector1.c++"                 \
+    --include "Vector2.c++"                 \
     --exclude "*"                           \
     ../../../examples/c++/ examples
 	@rsync -r -t -u -v --delete             \
@@ -145,9 +147,7 @@ sync:
 #
 #    --include "Copy.h"                      \
 #    --include "Fill.h"                      \
-#    --include "Vector1.c++"                 \
 #    --include "Vector1.h"                   \
-#    --include "Vector2.c++"                 \
 #    --include "Vector2.h"                   \
 #    --include "Shapes1.c++"                 \
 #    --include "Shapes1.h"                   \
