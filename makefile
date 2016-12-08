@@ -121,8 +121,6 @@ sync:
     --include "Iterators.c++"               \
     --include "Consts.c++"                  \
     --include "Arrays.c++"                  \
-    --include "Vector1.c++"                 \
-    --include "Vector2.c++"                 \
     --exclude "*"                           \
     ../../../examples/c++/ examples
 	@rsync -r -t -u -v --delete             \
@@ -134,6 +132,8 @@ sync:
     --include "Equal.c++"                   \
     --include "Copy.c++"                    \
     --include "Fill.c++"                    \
+    --include "Vector1.c++"                 \
+    --include "Vector2.c++"                 \
     --exclude "*"                           \
     ../../../exercises/c++/ exercises
 
