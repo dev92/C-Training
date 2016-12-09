@@ -121,6 +121,7 @@ sync:
     --include "Iterators.c++"               \
     --include "Consts.c++"                  \
     --include "Arrays.c++"                  \
+    --include "Classes.c++"                 \
     --include "MethodOverriding1.c++"       \
     --include "MethodOverriding2.c++"       \
     --exclude "*"                           \

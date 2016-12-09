@@ -13,6 +13,7 @@ FILES :=                \
     Iterators           \
     Consts              \
     Arrays              \
+    Classes             \
     MethodOverriding1   \
     MethodOverriding2
 
