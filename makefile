@@ -143,6 +143,7 @@ sync:
     --include "Vector2.c++"                 \
     --include "Vector2.h"                   \
     --include "Shapes1.c++"                 \
+    --include "Shapes1.h"                   \
     --include "Shapes2.c++"                 \
     --include "Shapes3.c++"                 \
     --exclude "*"                           \
