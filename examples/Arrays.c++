@@ -40,15 +40,17 @@ int main () {
 
     {
     int a[] = {2, 3, 4};
-    assert(*a            == a[0]);
-    assert(a             == &a[0]);
+    assert(*a == a[0]);
+    assert(a  == &a[0]);
     assert(sizeof(a)     != sizeof(&a[0]));
     assert(sizeof(a)     == 12);
     assert(sizeof(&a[0]) == 8);
 //  ++a;                                    // error: lvalue required as left operand of assignment
-    ++a[0];
-    assert(*a   == 3);
-//  assert(a[3] == 0);                      // undefined
+    ++a[1];
+    ++*(a + 1);
+    assert(a[1]     == 5);
+    assert(*(a + 1) == 5);
+//  assert(a[3]     == 0);                  // undefined
     }
 
     {
