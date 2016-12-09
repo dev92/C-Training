@@ -130,15 +130,24 @@ class vector {
             _s = rhs._s;
             _a = new T[_s];
             copy(rhs._a, rhs._a + _s, _a);}
+//      vector (const vector& rhs) {
+//          _a    = nullptr;
+//          *this = rhs;}
+        ~vector () {
+            delete [] _a;}
         vector& operator = (const vector& rhs) {
             _s = rhs._s;
             _a = rhs._a;
             return *this;}
-        vector& operator = (const vector& rhs) {
-            _s = rhs._s;
-            delete [] _a;
-            _a = new T[_s];
-            copy(rhs._a, rhs._a + _s, _a);
+        vector& operator = (vector rhs) {
+            swap(_s, rhs._s);
+            swap(_a, rhs._a);
+//          if (this == &rhs)
+//              return *this;
+//         _s = rhs._s;
+//          delete [] _a;
+//          _a = new T[_s];
+//          copy(rhs._a, rhs._a + _s, _a);
             return *this;}
 
 int main () {
@@ -149,6 +158,127 @@ int main () {
     vector<int> z(20, 3);
     x = z;
     x.operator=(z);
+
+// constructors exhibit refinement  overriding
+// destructors  exhibit refinement  overriding
+// methods      exhibit replacement overriding
+
+class string {
+    friend bool operator == (const string& lhs, const string& rhs) {
+                strcmp(...)
+    private:
+        ...
+    public:
+        string (char*) {...}
+//      bool operator == (const string& rhs) const {
+//          strcmp(...)
+
+void f (string u) {...}
+
+int main () {
+    const string s = "abc";
+    const string t = "abc";
+    cout << (s == t);         // true
+//  cout << s.operator==(t);  // true
+    cout << operator==(s, t); // ok
+    f(s);
+    f("abc");                 // ok
+    f(2);                     // not ok
+    cout << (s == "abc");     // ok
+    cout << ("abc" == s);     // not ok, becomes ok with a function
+
+class circle : public shape {
+    friend bool operator == (const circle& lhs, const circle& rhs) {
+        return (static_cast<const shape&>(lhs) == rhs) && (lhs._r == rhs._r);}
+    private:
+        int _r;
+    public:
+        circle (int x, int y, int r) :
+            shape(x, y) {
+            _r = r;}
+        double area () const {
+            return pi * r * r;}
+
+struct A {
+    int i;
+    B   x;
+
+int main () {
+    int i;
+    i = 2;
+    const int j;
+    int& k;
+
+// 4 cases that need the member initialization list in a constructor
+// 1. invoking the constructor of the parent that doesn't have a def constr
+// 2. invoking the constructor of a   member that doesn't have def constr
+// 3. a const     member
+// 4. a reference member
+
+struct A {
+    void f () {}};
+
+struct B : A {
+    void f () {}};
+
+struct C : A {
+    void f () {}};
+
+int main () {
+    A x;
+    x.f();        // A::f()
+    B y;
+    y.f();        // B::f()
+    A* p = new B;
+    p->f();       // A::f(), static binding
+
+    if (...)
+        p = new B;
+    else
+        p = new C;
+    p->f();        // A::f()
+
+struct A {
+    friend bool operator == (const A& lhs, const A& rhs) {
+        return lhs.equal(rhs);}
+    virtual bool equal (const A& rhs) {
+        ...}
+    virtual void f () {}};
+
+struct B : A {
+    bool equal (const A& rhs) {
+        ...}
+    void f () {}};
+
+struct C : A {
+    bool equal (const A& rhs) {
+        ...}
+    void f () {}};
+
+int main () {
+    A* p;
+    if (...)
+        p = new B;
+    else
+        p = new C;
+    p->f();        // B::f() or C::f(), dynamic binding
+    A* q;
+    if (...)
+        q = new B;
+    else
+        q = new C;
+    cout << (*p == *q);
+
+// signatures are made up of 5 things
+// 1. return type
+// 2. name
+// 3. number of args
+// 4. type of args
+// 5. const or not
+
+
+
+
 
 
 
