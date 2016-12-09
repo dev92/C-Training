@@ -147,6 +147,7 @@ sync:
     --include "Shapes2.c++"                 \
     --include "Shapes2.h"                   \
     --include "Shapes3.c++"                 \
+    --include "Shapes3.h"                   \
     --exclude "*"                           \
     ../../../exercises/c++/ exercises
 

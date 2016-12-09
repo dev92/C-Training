@@ -247,7 +247,10 @@ struct A {
 
 struct B : A {
     bool equal (const A& rhs) {
-        ...}
+        B* p = dynamic_cast<B*>(&rhs);
+        if (!p)
+            return false;
+
     void f () {}};
 
 struct C : A {
@@ -276,9 +279,52 @@ int main () {
 // 4. type of args
 // 5. const or not
 
+struct A {
+    void f (int) {}};
 
+struct B : A {
+    using A::f;
+    void f (string) {}};
 
+int main () {
+    B x;
+    x.f(2);
 
+struct A {
+    virtual void f (int) {}};
+
+struct B : A {
+    void f (long) {}};
+
+int main () {
+    A* p = new B;
+    p->f(2);      // A::f(int)
+
+class Shape {
+    public:
+        virtual double area () const = 0;
+    ...};
+
+class Triangle : public Shape {
+    public:
+        Triangle (...) {...}};
+
+int main () {
+    Triangle x(...);
+    cout << x.area();
+
+// 3 consequences to a pure virtual method (=0)
+// 1. class becomes abstract
+// 2. child defines the methor or becomes abstract
+// 3. definition in the base becomes optional
+
+struct A {
+    virtual ~A () = 0;};
+
+// 3 consequences to a pure virtual destructor (=0)
+// 1. class becomes abstract
+// 2. child defines the methor or becomes abstract
+// 3. definition in the base becomes optional
 
 
 
