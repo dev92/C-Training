@@ -132,40 +132,65 @@ x = v;   // T assignment operator of type v
 // 4. call it early
 // 5. the wrong address
 
+T v = ...;
+T* a = new T[s];   // T(), s times
+fill(a, a + s, v); // =(T), s times
+
+vector<T> x(s, v); // T(T), s times
+vector<T> y(x);    // T(T), s times
 
 
+vector<int>::iterator begin (vector<int>& r) {
+    return r.begin();}
 
+template <typename T>
+class vector {
+    private:
+        int s;
+        T*  a;
+    public:
+        vector (int s = 0, T v = T())
+            ...
 
+        T& operator [] (int i)
+            ...
+        T operator [] (int i) const
+            ...
 
+int main () {
+     vector<int> x(10, 2);
+    cout << x[3];
+    cout << x.operator[](3);
+    x[3] = 4; // not ok
 
+template <typename T>
+class vector {
+    private:
+        int _s;
+        T*  _a;
+    public:
+        vector (int s = 0, const T& v = T()) {
+            _s = s;
+            _a = new T[s];
+            fill(_a, _a + s, v);}
+        ~vector () {
+            delete [] _a;}
+        int size () const {
+            return _s;}
+        T* begin () {
+            return _a;}
+        const T* begin () const {
+            return _a;}
+        T* end () {
+            return _a + _s;}
+        const T* end () const {
+            return _a + _s;}
+        T& operator [] (int i) {
+            return _a[i];}
+        const T& operator [] (int i) const {
+            return _a[i];}
 
+const int i = 2;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const int i;     // not ok
+i = 2;
