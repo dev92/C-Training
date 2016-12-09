@@ -4,7 +4,10 @@ FILES :=          \
     IsPrime1      \
     IsPrime2      \
     Incr          \
-    Equal
+    Equal         \
+    Copy          \
+    Fill          \
+    Vector1
 
 ifeq ($(shell uname), Darwin)                                           # Apple
     CXX          := g++

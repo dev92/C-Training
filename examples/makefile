@@ -12,7 +12,9 @@ FILES :=                \
     Operators           \
     Iterators           \
     Consts              \
-    Arrays
+    Arrays              \
+    MethodOverriding1   \
+    MethodOverriding2
 
 ifeq ($(shell uname), Darwin)                                           # Apple
     CXX          := g++
