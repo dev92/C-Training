@@ -118,6 +118,7 @@ sync:
     --include "Exceptions.c++"              \
     --include "Variables.c++"               \
     --include "Operators.c++"               \
+    --include "Arguments.c++"               \
     --include "Iterators.c++"               \
     --include "Consts.c++"                  \
     --include "Arrays.c++"                  \

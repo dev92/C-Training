@@ -10,6 +10,7 @@ FILES :=                \
     Variables           \
     Types               \
     Operators           \
+    Arguments           \
     Iterators           \
     Consts              \
     Arrays              \
