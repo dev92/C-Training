@@ -126,9 +126,19 @@ class vector {
         vector (const vector& rhs) {
             _s = rhs._s;
             _a = rhs._a;}
+        vector (const vector& rhs) {
+            _s = rhs._s;
+            _a = new T[_s];
+            copy(rhs._a, rhs._a + _s, _a);}
         vector& operator = (const vector& rhs) {
             _s = rhs._s;
             _a = rhs._a;
+            return *this;}
+        vector& operator = (const vector& rhs) {
+            _s = rhs._s;
+            delete [] _a;
+            _a = new T[_s];
+            copy(rhs._a, rhs._a + _s, _a);
             return *this;}
 
 int main () {
