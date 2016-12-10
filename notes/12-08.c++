@@ -315,30 +315,29 @@ int main () {
 
 // 3 consequences to a pure virtual method (=0)
 // 1. class becomes abstract
-// 2. child defines the methor or becomes abstract
+// 2. child defines the method or becomes abstract
 // 3. definition in the base becomes optional
 
 struct A {
     virtual ~A () = 0;};
 
+A::~A() {}
+
 // 3 consequences to a pure virtual destructor (=0)
 // 1. class becomes abstract
-// 2. child defines the methor or becomes abstract
-// 3. definition in the base becomes optional
 
+struct A {
+    virtual void f (int) final {}
+    virtual void g (long) {}
+    virtual void h (long) = 0;};
 
+struct B : A {
+    void f (int) {}
+    virtual void g (int) override {}
+    virtual void h (int) {}};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+int main () {
+    B x;
+    x.f(2);       // B::f(int)
+    A* p = new B;
+    p->f(2);      // A::f(int)
