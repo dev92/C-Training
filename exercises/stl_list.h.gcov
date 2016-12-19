@@ -1,0 +1,1948 @@
+        -:    0:Source:/usr/local/include/c++/5.3.0/bits/stl_list.h
+        -:    0:Graph:Copy.gcno
+        -:    0:Data:Copy.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// List implementation -*- C++ -*-
+        -:    2:
+        -:    3:// Copyright (C) 2001-2015 Free Software Foundation, Inc.
+        -:    4://
+        -:    5:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    6:// software; you can redistribute it and/or modify it under the
+        -:    7:// terms of the GNU General Public License as published by the
+        -:    8:// Free Software Foundation; either version 3, or (at your option)
+        -:    9:// any later version.
+        -:   10:
+        -:   11:// This library is distributed in the hope that it will be useful,
+        -:   12:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   14:// GNU General Public License for more details.
+        -:   15:
+        -:   16:// Under Section 7 of GPL version 3, you are granted additional
+        -:   17:// permissions described in the GCC Runtime Library Exception, version
+        -:   18:// 3.1, as published by the Free Software Foundation.
+        -:   19:
+        -:   20:// You should have received a copy of the GNU General Public License and
+        -:   21:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   22:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   23:// <http://www.gnu.org/licenses/>.
+        -:   24:
+        -:   25:/*
+        -:   26: *
+        -:   27: * Copyright (c) 1994
+        -:   28: * Hewlett-Packard Company
+        -:   29: *
+        -:   30: * Permission to use, copy, modify, distribute and sell this software
+        -:   31: * and its documentation for any purpose is hereby granted without fee,
+        -:   32: * provided that the above copyright notice appear in all copies and
+        -:   33: * that both that copyright notice and this permission notice appear
+        -:   34: * in supporting documentation.  Hewlett-Packard Company makes no
+        -:   35: * representations about the suitability of this software for any
+        -:   36: * purpose.  It is provided "as is" without express or implied warranty.
+        -:   37: *
+        -:   38: *
+        -:   39: * Copyright (c) 1996,1997
+        -:   40: * Silicon Graphics Computer Systems, Inc.
+        -:   41: *
+        -:   42: * Permission to use, copy, modify, distribute and sell this software
+        -:   43: * and its documentation for any purpose is hereby granted without fee,
+        -:   44: * provided that the above copyright notice appear in all copies and
+        -:   45: * that both that copyright notice and this permission notice appear
+        -:   46: * in supporting documentation.  Silicon Graphics makes no
+        -:   47: * representations about the suitability of this software for any
+        -:   48: * purpose.  It is provided "as is" without express or implied warranty.
+        -:   49: */
+        -:   50:
+        -:   51:/** @file bits/stl_list.h
+        -:   52: *  This is an internal header file, included by other library headers.
+        -:   53: *  Do not attempt to use it directly. @headername{list}
+        -:   54: */
+        -:   55:
+        -:   56:#ifndef _STL_LIST_H
+        -:   57:#define _STL_LIST_H 1
+        -:   58:
+        -:   59:#include <bits/concept_check.h>
+        -:   60:#if __cplusplus >= 201103L
+        -:   61:#include <initializer_list>
+        -:   62:#endif
+        -:   63:
+        -:   64:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   65:{
+        -:   66:  namespace __detail
+        -:   67:  {
+        -:   68:  _GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   69:
+        -:   70:    // Supporting structures are split into common and templated
+        -:   71:    // types; the latter publicly inherits from the former in an
+        -:   72:    // effort to reduce code duplication.  This results in some
+        -:   73:    // "needless" static_cast'ing later on, but it's all safe
+        -:   74:    // downcasting.
+        -:   75:
+        -:   76:    /// Common part of a node in the %list. 
+        -:   77:    struct _List_node_base
+        -:   78:    {
+        -:   79:      _List_node_base* _M_next;
+        -:   80:      _List_node_base* _M_prev;
+        -:   81:
+        -:   82:      static void
+        -:   83:      swap(_List_node_base& __x, _List_node_base& __y) _GLIBCXX_USE_NOEXCEPT;
+        -:   84:
+        -:   85:      void
+        -:   86:      _M_transfer(_List_node_base* const __first,
+        -:   87:		  _List_node_base* const __last) _GLIBCXX_USE_NOEXCEPT;
+        -:   88:
+        -:   89:      void
+        -:   90:      _M_reverse() _GLIBCXX_USE_NOEXCEPT;
+        -:   91:
+        -:   92:      void
+        -:   93:      _M_hook(_List_node_base* const __position) _GLIBCXX_USE_NOEXCEPT;
+        -:   94:
+        -:   95:      void
+        -:   96:      _M_unhook() _GLIBCXX_USE_NOEXCEPT;
+        -:   97:    };
+        -:   98:
+        -:   99:  _GLIBCXX_END_NAMESPACE_VERSION
+        -:  100:  } // namespace detail
+        -:  101:
+        -:  102:_GLIBCXX_BEGIN_NAMESPACE_CONTAINER
+        -:  103:
+        -:  104:  /// An actual node in the %list.
+        -:  105:  template<typename _Tp>
+        -:  106:    struct _List_node : public __detail::_List_node_base
+        -:  107:    {
+        -:  108:      ///< User's data.
+        -:  109:      _Tp _M_data;
+        -:  110:
+        -:  111:#if __cplusplus >= 201103L
+        -:  112:      template<typename... _Args>
+function _ZNSt10_List_nodeIiEC2IJRKiEEEDpOT_ called 14 returned 100% blocks executed 100%
+function _ZNSt10_List_nodeImEC2IJEEEDpOT_ called 4 returned 100% blocks executed 100%
+       18:  113:        _List_node(_Args&&... __args)
+       18:  114:	: __detail::_List_node_base(), _M_data(std::forward<_Args>(__args)...) 
+call    0 returned 100%
+       18:  115:        { }
+        -:  116:#endif
+        -:  117:    };
+        -:  118:
+        -:  119:  /**
+        -:  120:   *  @brief A list::iterator.
+        -:  121:   *
+        -:  122:   *  All the functions are op overloads.
+        -:  123:  */
+        -:  124:  template<typename _Tp>
+        -:  125:    struct _List_iterator
+        -:  126:    {
+        -:  127:      typedef _List_iterator<_Tp>                _Self;
+        -:  128:      typedef _List_node<_Tp>                    _Node;
+        -:  129:
+        -:  130:      typedef ptrdiff_t                          difference_type;
+        -:  131:      typedef std::bidirectional_iterator_tag    iterator_category;
+        -:  132:      typedef _Tp                                value_type;
+        -:  133:      typedef _Tp*                               pointer;
+        -:  134:      typedef _Tp&                               reference;
+        -:  135:
+        -:  136:      _List_iterator() _GLIBCXX_NOEXCEPT
+        -:  137:      : _M_node() { }
+        -:  138:
+        -:  139:      explicit
+function _ZNSt14_List_iteratorIiEC2EPNSt8__detail15_List_node_baseE called 14 returned 100% blocks executed 100%
+       14:  140:      _List_iterator(__detail::_List_node_base* __x) _GLIBCXX_NOEXCEPT
+       14:  141:      : _M_node(__x) { }
+        -:  142:
+        -:  143:      _Self
+        -:  144:      _M_const_cast() const _GLIBCXX_NOEXCEPT
+        -:  145:      { return *this; }
+        -:  146:
+        -:  147:      // Must downcast from _List_node_base to _List_node to get to _M_data.
+        -:  148:      reference
+        -:  149:      operator*() const _GLIBCXX_NOEXCEPT
+        -:  150:      { return static_cast<_Node*>(_M_node)->_M_data; }
+        -:  151:
+        -:  152:      pointer
+        -:  153:      operator->() const _GLIBCXX_NOEXCEPT
+        -:  154:      { return std::__addressof(static_cast<_Node*>(_M_node)->_M_data); }
+        -:  155:
+        -:  156:      _Self&
+        -:  157:      operator++() _GLIBCXX_NOEXCEPT
+        -:  158:      {
+        -:  159:	_M_node = _M_node->_M_next;
+        -:  160:	return *this;
+        -:  161:      }
+        -:  162:
+        -:  163:      _Self
+        -:  164:      operator++(int) _GLIBCXX_NOEXCEPT
+        -:  165:      {
+        -:  166:	_Self __tmp = *this;
+        -:  167:	_M_node = _M_node->_M_next;
+        -:  168:	return __tmp;
+        -:  169:      }
+        -:  170:
+        -:  171:      _Self&
+        -:  172:      operator--() _GLIBCXX_NOEXCEPT
+        -:  173:      {
+        -:  174:	_M_node = _M_node->_M_prev;
+        -:  175:	return *this;
+        -:  176:      }
+        -:  177:
+        -:  178:      _Self
+        -:  179:      operator--(int) _GLIBCXX_NOEXCEPT
+        -:  180:      {
+        -:  181:	_Self __tmp = *this;
+        -:  182:	_M_node = _M_node->_M_prev;
+        -:  183:	return __tmp;
+        -:  184:      }
+        -:  185:
+        -:  186:      bool
+        -:  187:      operator==(const _Self& __x) const _GLIBCXX_NOEXCEPT
+        -:  188:      { return _M_node == __x._M_node; }
+        -:  189:
+        -:  190:      bool
+        -:  191:      operator!=(const _Self& __x) const _GLIBCXX_NOEXCEPT
+        -:  192:      { return _M_node != __x._M_node; }
+        -:  193:
+        -:  194:      // The only member points to the %list element.
+        -:  195:      __detail::_List_node_base* _M_node;
+        -:  196:    };
+        -:  197:
+        -:  198:  /**
+        -:  199:   *  @brief A list::const_iterator.
+        -:  200:   *
+        -:  201:   *  All the functions are op overloads.
+        -:  202:  */
+        -:  203:  template<typename _Tp>
+        -:  204:    struct _List_const_iterator
+        -:  205:    {
+        -:  206:      typedef _List_const_iterator<_Tp>          _Self;
+        -:  207:      typedef const _List_node<_Tp>              _Node;
+        -:  208:      typedef _List_iterator<_Tp>                iterator;
+        -:  209:
+        -:  210:      typedef ptrdiff_t                          difference_type;
+        -:  211:      typedef std::bidirectional_iterator_tag    iterator_category;
+        -:  212:      typedef _Tp                                value_type;
+        -:  213:      typedef const _Tp*                         pointer;
+        -:  214:      typedef const _Tp&                         reference;
+        -:  215:
+        -:  216:      _List_const_iterator() _GLIBCXX_NOEXCEPT
+        -:  217:      : _M_node() { }
+        -:  218:
+        -:  219:      explicit
+function _ZNSt20_List_const_iteratorIiEC2EPKNSt8__detail15_List_node_baseE called 8 returned 100% blocks executed 100%
+        8:  220:      _List_const_iterator(const __detail::_List_node_base* __x)
+        -:  221:      _GLIBCXX_NOEXCEPT
+        8:  222:      : _M_node(__x) { }
+        -:  223:
+        -:  224:      _List_const_iterator(const iterator& __x) _GLIBCXX_NOEXCEPT
+        -:  225:      : _M_node(__x._M_node) { }
+        -:  226:
+        -:  227:      iterator
+        -:  228:      _M_const_cast() const _GLIBCXX_NOEXCEPT
+        -:  229:      { return iterator(const_cast<__detail::_List_node_base*>(_M_node)); }
+        -:  230:
+        -:  231:      // Must downcast from List_node_base to _List_node to get to
+        -:  232:      // _M_data.
+        -:  233:      reference
+function _ZNKSt20_List_const_iteratorIiEdeEv called 14 returned 100% blocks executed 100%
+       14:  234:      operator*() const _GLIBCXX_NOEXCEPT
+       14:  235:      { return static_cast<_Node*>(_M_node)->_M_data; }
+        -:  236:
+        -:  237:      pointer
+        -:  238:      operator->() const _GLIBCXX_NOEXCEPT
+        -:  239:      { return std::__addressof(static_cast<_Node*>(_M_node)->_M_data); }
+        -:  240:
+        -:  241:      _Self&
+function _ZNSt20_List_const_iteratorIiEppEv called 14 returned 100% blocks executed 100%
+       14:  242:      operator++() _GLIBCXX_NOEXCEPT
+        -:  243:      {
+       14:  244:	_M_node = _M_node->_M_next;
+       14:  245:	return *this;
+        -:  246:      }
+        -:  247:
+        -:  248:      _Self
+        -:  249:      operator++(int) _GLIBCXX_NOEXCEPT
+        -:  250:      {
+        -:  251:	_Self __tmp = *this;
+        -:  252:	_M_node = _M_node->_M_next;
+        -:  253:	return __tmp;
+        -:  254:      }
+        -:  255:
+        -:  256:      _Self&
+        -:  257:      operator--() _GLIBCXX_NOEXCEPT
+        -:  258:      {
+        -:  259:	_M_node = _M_node->_M_prev;
+        -:  260:	return *this;
+        -:  261:      }
+        -:  262:
+        -:  263:      _Self
+        -:  264:      operator--(int) _GLIBCXX_NOEXCEPT
+        -:  265:      {
+        -:  266:	_Self __tmp = *this;
+        -:  267:	_M_node = _M_node->_M_prev;
+        -:  268:	return __tmp;
+        -:  269:      }
+        -:  270:
+        -:  271:      bool
+        -:  272:      operator==(const _Self& __x) const _GLIBCXX_NOEXCEPT
+        -:  273:      { return _M_node == __x._M_node; }
+        -:  274:
+        -:  275:      bool
+function _ZNKSt20_List_const_iteratorIiEneERKS0_ called 18 returned 100% blocks executed 100%
+       18:  276:      operator!=(const _Self& __x) const _GLIBCXX_NOEXCEPT
+       18:  277:      { return _M_node != __x._M_node; }
+        -:  278:
+        -:  279:      // The only member points to the %list element.
+        -:  280:      const __detail::_List_node_base* _M_node;
+        -:  281:    };
+        -:  282:
+        -:  283:  template<typename _Val>
+        -:  284:    inline bool
+        -:  285:    operator==(const _List_iterator<_Val>& __x,
+        -:  286:	       const _List_const_iterator<_Val>& __y) _GLIBCXX_NOEXCEPT
+        -:  287:    { return __x._M_node == __y._M_node; }
+        -:  288:
+        -:  289:  template<typename _Val>
+        -:  290:    inline bool
+        -:  291:    operator!=(const _List_iterator<_Val>& __x,
+        -:  292:               const _List_const_iterator<_Val>& __y) _GLIBCXX_NOEXCEPT
+        -:  293:    { return __x._M_node != __y._M_node; }
+        -:  294:
+        -:  295:_GLIBCXX_BEGIN_NAMESPACE_CXX11
+        -:  296:  /// See bits/stl_deque.h's _Deque_base for an explanation.
+        -:  297:  template<typename _Tp, typename _Alloc>
+        -:  298:    class _List_base
+        -:  299:    {
+        -:  300:    protected:
+        -:  301:      // NOTA BENE
+        -:  302:      // The stored instance is not actually of "allocator_type"'s
+        -:  303:      // type.  Instead we rebind the type to
+        -:  304:      // Allocator<List_node<Tp>>, which according to [20.1.5]/4
+        -:  305:      // should probably be the same.  List_node<Tp> is not the same
+        -:  306:      // size as Tp (it's two pointers larger), and specializations on
+        -:  307:      // Tp may go unused because List_node<Tp> is being bound
+        -:  308:      // instead.
+        -:  309:      //
+        -:  310:      // We put this to the test in the constructors and in
+        -:  311:      // get_allocator, where we use conversions between
+        -:  312:      // allocator_type and _Node_alloc_type. The conversion is
+        -:  313:      // required by table 32 in [20.1.5].
+        -:  314:      typedef typename _Alloc::template rebind<_List_node<_Tp> >::other
+        -:  315:        _Node_alloc_type;
+        -:  316:
+        -:  317:      typedef typename _Alloc::template rebind<_Tp>::other _Tp_alloc_type;
+        -:  318:
+        -:  319:      static size_t
+        -:  320:      _S_distance(const __detail::_List_node_base* __first,
+        -:  321:		  const __detail::_List_node_base* __last)
+        -:  322:      {
+        -:  323:	size_t __n = 0;
+        -:  324:	while (__first != __last)
+        -:  325:	  {
+        -:  326:	    __first = __first->_M_next;
+        -:  327:	    ++__n;
+        -:  328:	  }
+        -:  329:	return __n;
+        -:  330:      }
+        -:  331:
+function _ZNSt7__cxx1110_List_baseIiSaIiEE10_List_implD2Ev called 4 returned 100% blocks executed 100%
+        4:  332:      struct _List_impl
+call    0 returned 100%
+        -:  333:      : public _Node_alloc_type
+        -:  334:      {
+        -:  335:#if _GLIBCXX_USE_CXX11_ABI
+        -:  336:	_List_node<size_t> _M_node;
+        -:  337:#else
+        -:  338:	__detail::_List_node_base _M_node;
+        -:  339:#endif
+        -:  340:
+        -:  341:	_List_impl()
+        -:  342:	: _Node_alloc_type(), _M_node()
+        -:  343:	{ }
+        -:  344:
+function _ZNSt7__cxx1110_List_baseIiSaIiEE10_List_implC2ERKSaISt10_List_nodeIiEE called 4 returned 100% blocks executed 100%
+        4:  345:	_List_impl(const _Node_alloc_type& __a) _GLIBCXX_NOEXCEPT
+        4:  346:	: _Node_alloc_type(__a), _M_node()
+call    0 returned 100%
+call    1 returned 100%
+        4:  347:	{ }
+        -:  348:
+        -:  349:#if __cplusplus >= 201103L
+        -:  350:	_List_impl(_Node_alloc_type&& __a) _GLIBCXX_NOEXCEPT
+        -:  351:	: _Node_alloc_type(std::move(__a)), _M_node()
+        -:  352:	{ }
+        -:  353:#endif
+        -:  354:      };
+        -:  355:
+        -:  356:      _List_impl _M_impl;
+        -:  357:
+        -:  358:#if _GLIBCXX_USE_CXX11_ABI
+        -:  359:      size_t _M_get_size() const { return _M_impl._M_node._M_data; }
+        -:  360:
+function _ZNSt7__cxx1110_List_baseIiSaIiEE11_M_set_sizeEm called 4 returned 100% blocks executed 100%
+        4:  361:      void _M_set_size(size_t __n) { _M_impl._M_node._M_data = __n; }
+        -:  362:
+function _ZNSt7__cxx1110_List_baseIiSaIiEE11_M_inc_sizeEm called 14 returned 100% blocks executed 100%
+       14:  363:      void _M_inc_size(size_t __n) { _M_impl._M_node._M_data += __n; }
+        -:  364:
+        -:  365:      void _M_dec_size(size_t __n) { _M_impl._M_node._M_data -= __n; }
+        -:  366:
+        -:  367:      size_t
+        -:  368:      _M_distance(const __detail::_List_node_base* __first,
+        -:  369:		  const __detail::_List_node_base* __last) const
+        -:  370:      { return _S_distance(__first, __last); }
+        -:  371:
+        -:  372:      // return the stored size
+        -:  373:      size_t _M_node_count() const { return _M_impl._M_node._M_data; }
+        -:  374:#else
+        -:  375:      // dummy implementations used when the size is not stored
+        -:  376:      size_t _M_get_size() const { return 0; }
+        -:  377:      void _M_set_size(size_t) { }
+        -:  378:      void _M_inc_size(size_t) { }
+        -:  379:      void _M_dec_size(size_t) { }
+        -:  380:      size_t _M_distance(const void*, const void*) const { return 0; }
+        -:  381:
+        -:  382:      // count the number of nodes
+        -:  383:      size_t _M_node_count() const
+        -:  384:      {
+        -:  385:	return _S_distance(_M_impl._M_node._M_next,
+        -:  386:			   std::__addressof(_M_impl._M_node));
+        -:  387:      }
+        -:  388:#endif
+        -:  389:
+        -:  390:      _List_node<_Tp>*
+function _ZNSt7__cxx1110_List_baseIiSaIiEE11_M_get_nodeEv called 14 returned 100% blocks executed 100%
+       14:  391:      _M_get_node()
+       14:  392:      { return _M_impl._Node_alloc_type::allocate(1); }
+call    0 returned 100%
+        -:  393:
+        -:  394:      void
+function _ZNSt7__cxx1110_List_baseIiSaIiEE11_M_put_nodeEPSt10_List_nodeIiE called 14 returned 100% blocks executed 100%
+       14:  395:      _M_put_node(_List_node<_Tp>* __p) _GLIBCXX_NOEXCEPT
+       14:  396:      { _M_impl._Node_alloc_type::deallocate(__p, 1); }
+call    0 returned 100%
+        -:  397:
+        -:  398:  public:
+        -:  399:      typedef _Alloc allocator_type;
+        -:  400:
+        -:  401:      _Node_alloc_type&
+function _ZNSt7__cxx1110_List_baseIiSaIiEE21_M_get_Node_allocatorEv called 28 returned 100% blocks executed 100%
+       28:  402:      _M_get_Node_allocator() _GLIBCXX_NOEXCEPT
+       28:  403:      { return *static_cast<_Node_alloc_type*>(&_M_impl); }
+        -:  404:
+        -:  405:      const _Node_alloc_type&
+        -:  406:      _M_get_Node_allocator() const _GLIBCXX_NOEXCEPT
+        -:  407:      { return *static_cast<const _Node_alloc_type*>(&_M_impl); }
+        -:  408:
+        -:  409:      _Tp_alloc_type
+        -:  410:      _M_get_Tp_allocator() const _GLIBCXX_NOEXCEPT
+        -:  411:      { return _Tp_alloc_type(_M_get_Node_allocator()); }
+        -:  412:
+        -:  413:      allocator_type
+        -:  414:      get_allocator() const _GLIBCXX_NOEXCEPT
+        -:  415:      { return allocator_type(_M_get_Node_allocator()); }
+        -:  416:
+        -:  417:      _List_base()
+        -:  418:      : _M_impl()
+        -:  419:      { _M_init(); }
+        -:  420:
+function _ZNSt7__cxx1110_List_baseIiSaIiEEC2ERKSaISt10_List_nodeIiEE called 4 returned 100% blocks executed 100%
+        4:  421:      _List_base(const _Node_alloc_type& __a) _GLIBCXX_NOEXCEPT
+        4:  422:      : _M_impl(__a)
+call    0 returned 100%
+        4:  423:      { _M_init(); }
+call    0 returned 100%
+        -:  424:
+        -:  425:#if __cplusplus >= 201103L
+        -:  426:      _List_base(_List_base&& __x) noexcept
+        -:  427:      : _M_impl(std::move(__x._M_get_Node_allocator()))
+        -:  428:      {
+        -:  429:	auto* const __xnode = std::__addressof(__x._M_impl._M_node);
+        -:  430:	if (__xnode->_M_next == __xnode)
+        -:  431:	  _M_init();
+        -:  432:	else
+        -:  433:	  {
+        -:  434:	    auto* const __node = std::__addressof(_M_impl._M_node);
+        -:  435:	    __node->_M_next = __xnode->_M_next;
+        -:  436:	    __node->_M_prev = __xnode->_M_prev;
+        -:  437:	    __node->_M_next->_M_prev = __node->_M_prev->_M_next = __node;
+        -:  438:	    _M_set_size(__x._M_get_size());
+        -:  439:	    __x._M_init();
+        -:  440:	  }
+        -:  441:      }
+        -:  442:#endif
+        -:  443:
+        -:  444:      // This is what actually destroys the list.
+function _ZNSt7__cxx1110_List_baseIiSaIiEED2Ev called 4 returned 100% blocks executed 100%
+        4:  445:      ~_List_base() _GLIBCXX_NOEXCEPT
+        4:  446:      { _M_clear(); }
+call    0 returned 100%
+call    1 returned 100%
+        -:  447:
+        -:  448:      void
+        -:  449:      _M_clear() _GLIBCXX_NOEXCEPT;
+        -:  450:
+        -:  451:      void
+function _ZNSt7__cxx1110_List_baseIiSaIiEE7_M_initEv called 4 returned 100% blocks executed 100%
+        4:  452:      _M_init() _GLIBCXX_NOEXCEPT
+        -:  453:      {
+        4:  454:        this->_M_impl._M_node._M_next = &this->_M_impl._M_node;
+        4:  455:        this->_M_impl._M_node._M_prev = &this->_M_impl._M_node;
+        4:  456:	_M_set_size(0);
+call    0 returned 100%
+        4:  457:      }
+        -:  458:    };
+        -:  459:
+        -:  460:  /**
+        -:  461:   *  @brief A standard container with linear time access to elements,
+        -:  462:   *  and fixed time insertion/deletion at any point in the sequence.
+        -:  463:   *
+        -:  464:   *  @ingroup sequences
+        -:  465:   *
+        -:  466:   *  @tparam _Tp  Type of element.
+        -:  467:   *  @tparam _Alloc  Allocator type, defaults to allocator<_Tp>.
+        -:  468:   *
+        -:  469:   *  Meets the requirements of a <a href="tables.html#65">container</a>, a
+        -:  470:   *  <a href="tables.html#66">reversible container</a>, and a
+        -:  471:   *  <a href="tables.html#67">sequence</a>, including the
+        -:  472:   *  <a href="tables.html#68">optional sequence requirements</a> with the
+        -:  473:   *  %exception of @c at and @c operator[].
+        -:  474:   *
+        -:  475:   *  This is a @e doubly @e linked %list.  Traversal up and down the
+        -:  476:   *  %list requires linear time, but adding and removing elements (or
+        -:  477:   *  @e nodes) is done in constant time, regardless of where the
+        -:  478:   *  change takes place.  Unlike std::vector and std::deque,
+        -:  479:   *  random-access iterators are not provided, so subscripting ( @c
+        -:  480:   *  [] ) access is not allowed.  For algorithms which only need
+        -:  481:   *  sequential access, this lack makes no difference.
+        -:  482:   *
+        -:  483:   *  Also unlike the other standard containers, std::list provides
+        -:  484:   *  specialized algorithms %unique to linked lists, such as
+        -:  485:   *  splicing, sorting, and in-place reversal.
+        -:  486:   *
+        -:  487:   *  A couple points on memory allocation for list<Tp>:
+        -:  488:   *
+        -:  489:   *  First, we never actually allocate a Tp, we allocate
+        -:  490:   *  List_node<Tp>'s and trust [20.1.5]/4 to DTRT.  This is to ensure
+        -:  491:   *  that after elements from %list<X,Alloc1> are spliced into
+        -:  492:   *  %list<X,Alloc2>, destroying the memory of the second %list is a
+        -:  493:   *  valid operation, i.e., Alloc1 giveth and Alloc2 taketh away.
+        -:  494:   *
+        -:  495:   *  Second, a %list conceptually represented as
+        -:  496:   *  @code
+        -:  497:   *    A <---> B <---> C <---> D
+        -:  498:   *  @endcode
+        -:  499:   *  is actually circular; a link exists between A and D.  The %list
+        -:  500:   *  class holds (as its only data member) a private list::iterator
+        -:  501:   *  pointing to @e D, not to @e A!  To get to the head of the %list,
+        -:  502:   *  we start at the tail and move forward by one.  When this member
+        -:  503:   *  iterator's next/previous pointers refer to itself, the %list is
+        -:  504:   *  %empty. 
+        -:  505:  */
+        -:  506:  template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
+function _ZNSt7__cxx114listIiSaIiEED2Ev called 4 returned 100% blocks executed 100%
+        4:  507:    class list : protected _List_base<_Tp, _Alloc>
+call    0 returned 100%
+        -:  508:    {
+        -:  509:      // concept requirements
+        -:  510:      typedef typename _Alloc::value_type                _Alloc_value_type;
+        -:  511:      __glibcxx_class_requires(_Tp, _SGIAssignableConcept)
+        -:  512:      __glibcxx_class_requires2(_Tp, _Alloc_value_type, _SameTypeConcept)
+        -:  513:
+        -:  514:      typedef _List_base<_Tp, _Alloc>                    _Base;
+        -:  515:      typedef typename _Base::_Tp_alloc_type		 _Tp_alloc_type;
+        -:  516:      typedef typename _Base::_Node_alloc_type		 _Node_alloc_type;
+        -:  517:
+        -:  518:    public:
+        -:  519:      typedef _Tp                                        value_type;
+        -:  520:      typedef typename _Tp_alloc_type::pointer           pointer;
+        -:  521:      typedef typename _Tp_alloc_type::const_pointer     const_pointer;
+        -:  522:      typedef typename _Tp_alloc_type::reference         reference;
+        -:  523:      typedef typename _Tp_alloc_type::const_reference   const_reference;
+        -:  524:      typedef _List_iterator<_Tp>                        iterator;
+        -:  525:      typedef _List_const_iterator<_Tp>                  const_iterator;
+        -:  526:      typedef std::reverse_iterator<const_iterator>      const_reverse_iterator;
+        -:  527:      typedef std::reverse_iterator<iterator>            reverse_iterator;
+        -:  528:      typedef size_t                                     size_type;
+        -:  529:      typedef ptrdiff_t                                  difference_type;
+        -:  530:      typedef _Alloc                                     allocator_type;
+        -:  531:
+        -:  532:    protected:
+        -:  533:      // Note that pointers-to-_Node's can be ctor-converted to
+        -:  534:      // iterator types.
+        -:  535:      typedef _List_node<_Tp>				 _Node;
+        -:  536:
+        -:  537:      using _Base::_M_impl;
+        -:  538:      using _Base::_M_put_node;
+        -:  539:      using _Base::_M_get_node;
+        -:  540:      using _Base::_M_get_Tp_allocator;
+        -:  541:      using _Base::_M_get_Node_allocator;
+        -:  542:
+        -:  543:      /**
+        -:  544:       *  @param  __args  An instance of user data.
+        -:  545:       *
+        -:  546:       *  Allocates space for a new node and constructs a copy of
+        -:  547:       *  @a __args in it.
+        -:  548:       */
+        -:  549:#if __cplusplus < 201103L
+        -:  550:      _Node*
+        -:  551:      _M_create_node(const value_type& __x)
+        -:  552:      {
+        -:  553:	_Node* __p = this->_M_get_node();
+        -:  554:	__try
+        -:  555:	  {
+        -:  556:	    _M_get_Tp_allocator().construct
+        -:  557:	      (std::__addressof(__p->_M_data), __x);
+        -:  558:	  }
+        -:  559:	__catch(...)
+        -:  560:	  {
+        -:  561:	    _M_put_node(__p);
+        -:  562:	    __throw_exception_again;
+        -:  563:	  }
+        -:  564:	return __p;
+        -:  565:      }
+        -:  566:#else
+        -:  567:      template<typename... _Args>
+        -:  568:        _Node*
+function _ZNSt7__cxx114listIiSaIiEE14_M_create_nodeIJRKiEEEPSt10_List_nodeIiEDpOT_ called 14 returned 100% blocks executed 58%
+       14:  569:        _M_create_node(_Args&&... __args)
+        -:  570:	{
+       14:  571:	  _Node* __p = this->_M_get_node();
+call    0 returned 100%
+        -:  572:	  __try
+        -:  573:	    {
+       14:  574:	      _M_get_Node_allocator().construct(__p,
+call    0 returned 100%
+call    1 returned 100%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0% (throw)
+       14:  575:						std::forward<_Args>(__args)...);
+call    0 returned 100%
+        -:  576:	    }
+    =====:  577:	  __catch(...)
+call    0 never executed
+call    1 never executed
+        -:  578:	    {
+    =====:  579:	      _M_put_node(__p);
+call    0 never executed
+    =====:  580:	      __throw_exception_again;
+call    0 never executed
+        -:  581:	    }
+       14:  582:	  return __p;
+        -:  583:	}
+        -:  584:#endif
+        -:  585:
+        -:  586:    public:
+        -:  587:      // [23.2.2.1] construct/copy/destroy
+        -:  588:      // (assign() and get_allocator() are also listed in this section)
+        -:  589:
+        -:  590:      /**
+        -:  591:       *  @brief  Creates a %list with no elements.
+        -:  592:       */
+        -:  593:      list()
+        -:  594:#if __cplusplus >= 201103L
+        -:  595:      noexcept(is_nothrow_default_constructible<_Node_alloc_type>::value)
+        -:  596:#endif
+        -:  597:      : _Base() { }
+        -:  598:
+        -:  599:      /**
+        -:  600:       *  @brief  Creates a %list with no elements.
+        -:  601:       *  @param  __a  An allocator object.
+        -:  602:       */
+        -:  603:      explicit
+        -:  604:      list(const allocator_type& __a) _GLIBCXX_NOEXCEPT
+        -:  605:      : _Base(_Node_alloc_type(__a)) { }
+        -:  606:
+        -:  607:#if __cplusplus >= 201103L
+        -:  608:      /**
+        -:  609:       *  @brief  Creates a %list with default constructed elements.
+        -:  610:       *  @param  __n  The number of elements to initially create.
+        -:  611:       *
+        -:  612:       *  This constructor fills the %list with @a __n default
+        -:  613:       *  constructed elements.
+        -:  614:       */
+        -:  615:      explicit
+        -:  616:      list(size_type __n)
+        -:  617:      : _Base()
+        -:  618:      { _M_default_initialize(__n); }
+        -:  619:
+        -:  620:      /**
+        -:  621:       *  @brief  Creates a %list with copies of an exemplar element.
+        -:  622:       *  @param  __n  The number of elements to initially create.
+        -:  623:       *  @param  __value  An element to copy.
+        -:  624:       *  @param  __a  An allocator object.
+        -:  625:       *
+        -:  626:       *  This constructor fills the %list with @a __n copies of @a __value.
+        -:  627:       */
+        -:  628:      list(size_type __n, const value_type& __value,
+        -:  629:	   const allocator_type& __a = allocator_type())
+        -:  630:      : _Base(_Node_alloc_type(__a))
+        -:  631:      { _M_fill_initialize(__n, __value); }
+        -:  632:#else
+        -:  633:      /**
+        -:  634:       *  @brief  Creates a %list with copies of an exemplar element.
+        -:  635:       *  @param  __n  The number of elements to initially create.
+        -:  636:       *  @param  __value  An element to copy.
+        -:  637:       *  @param  __a  An allocator object.
+        -:  638:       *
+        -:  639:       *  This constructor fills the %list with @a __n copies of @a __value.
+        -:  640:       */
+        -:  641:      explicit
+        -:  642:      list(size_type __n, const value_type& __value = value_type(),
+        -:  643:	   const allocator_type& __a = allocator_type())
+        -:  644:      : _Base(_Node_alloc_type(__a))
+        -:  645:      { _M_fill_initialize(__n, __value); }
+        -:  646:#endif
+        -:  647:
+        -:  648:      /**
+        -:  649:       *  @brief  %List copy constructor.
+        -:  650:       *  @param  __x  A %list of identical element and allocator types.
+        -:  651:       *
+        -:  652:       *  The newly-created %list uses a copy of the allocation object used
+        -:  653:       *  by @a __x.
+        -:  654:       */
+        -:  655:      list(const list& __x)
+        -:  656:      : _Base(__x._M_get_Node_allocator())
+        -:  657:      { _M_initialize_dispatch(__x.begin(), __x.end(), __false_type()); }
+        -:  658:
+        -:  659:#if __cplusplus >= 201103L
+        -:  660:      /**
+        -:  661:       *  @brief  %List move constructor.
+        -:  662:       *  @param  __x  A %list of identical element and allocator types.
+        -:  663:       *
+        -:  664:       *  The newly-created %list contains the exact contents of @a __x.
+        -:  665:       *  The contents of @a __x are a valid, but unspecified %list.
+        -:  666:       */
+        -:  667:      list(list&& __x) noexcept
+        -:  668:      : _Base(std::move(__x)) { }
+        -:  669:
+        -:  670:      /**
+        -:  671:       *  @brief  Builds a %list from an initializer_list
+        -:  672:       *  @param  __l  An initializer_list of value_type.
+        -:  673:       *  @param  __a  An allocator object.
+        -:  674:       *
+        -:  675:       *  Create a %list consisting of copies of the elements in the
+        -:  676:       *  initializer_list @a __l.  This is linear in __l.size().
+        -:  677:       */
+function _ZNSt7__cxx114listIiSaIiEEC2ESt16initializer_listIiERKS1_ called 4 returned 100% blocks executed 80%
+        4:  678:      list(initializer_list<value_type> __l,
+        -:  679:           const allocator_type& __a = allocator_type())
+        4:  680:      : _Base(_Node_alloc_type(__a))
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+call    3 never executed
+        4:  681:      { _M_initialize_dispatch(__l.begin(), __l.end(), __false_type()); }
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+branch  3 taken 100% (fallthrough)
+branch  4 taken 0% (throw)
+        -:  682:#endif
+        -:  683:
+        -:  684:      /**
+        -:  685:       *  @brief  Builds a %list from a range.
+        -:  686:       *  @param  __first  An input iterator.
+        -:  687:       *  @param  __last  An input iterator.
+        -:  688:       *  @param  __a  An allocator object.
+        -:  689:       *
+        -:  690:       *  Create a %list consisting of copies of the elements from
+        -:  691:       *  [@a __first,@a __last).  This is linear in N (where N is
+        -:  692:       *  distance(@a __first,@a __last)).
+        -:  693:       */
+        -:  694:#if __cplusplus >= 201103L
+        -:  695:      template<typename _InputIterator,
+        -:  696:	       typename = std::_RequireInputIter<_InputIterator>>
+        -:  697:        list(_InputIterator __first, _InputIterator __last,
+        -:  698:	     const allocator_type& __a = allocator_type())
+        -:  699:	: _Base(_Node_alloc_type(__a))
+        -:  700:        { _M_initialize_dispatch(__first, __last, __false_type()); }
+        -:  701:#else
+        -:  702:      template<typename _InputIterator>
+        -:  703:        list(_InputIterator __first, _InputIterator __last,
+        -:  704:	     const allocator_type& __a = allocator_type())
+        -:  705:	: _Base(_Node_alloc_type(__a))
+        -:  706:        { 
+        -:  707:	  // Check whether it's an integral type.  If so, it's not an iterator.
+        -:  708:	  typedef typename std::__is_integer<_InputIterator>::__type _Integral;
+        -:  709:	  _M_initialize_dispatch(__first, __last, _Integral());
+        -:  710:	}
+        -:  711:#endif
+        -:  712:
+        -:  713:      /**
+        -:  714:       *  No explicit dtor needed as the _Base dtor takes care of
+        -:  715:       *  things.  The _Base dtor only erases the elements, and note
+        -:  716:       *  that if the elements themselves are pointers, the pointed-to
+        -:  717:       *  memory is not touched in any way.  Managing the pointer is
+        -:  718:       *  the user's responsibility.
+        -:  719:       */
+        -:  720:
+        -:  721:      /**
+        -:  722:       *  @brief  %List assignment operator.
+        -:  723:       *  @param  __x  A %list of identical element and allocator types.
+        -:  724:       *
+        -:  725:       *  All the elements of @a __x are copied, but unlike the copy
+        -:  726:       *  constructor, the allocator object is not copied.
+        -:  727:       */
+        -:  728:      list&
+        -:  729:      operator=(const list& __x);
+        -:  730:
+        -:  731:#if __cplusplus >= 201103L
+        -:  732:      /**
+        -:  733:       *  @brief  %List move assignment operator.
+        -:  734:       *  @param  __x  A %list of identical element and allocator types.
+        -:  735:       *
+        -:  736:       *  The contents of @a __x are moved into this %list (without copying).
+        -:  737:       *  @a __x is a valid, but unspecified %list
+        -:  738:       */
+        -:  739:      list&
+        -:  740:      operator=(list&& __x)
+        -:  741:      {
+        -:  742:	// NB: DR 1204.
+        -:  743:	// NB: DR 675.
+        -:  744:	this->clear();
+        -:  745:	this->swap(__x);
+        -:  746:	return *this;
+        -:  747:      }
+        -:  748:
+        -:  749:      /**
+        -:  750:       *  @brief  %List initializer list assignment operator.
+        -:  751:       *  @param  __l  An initializer_list of value_type.
+        -:  752:       *
+        -:  753:       *  Replace the contents of the %list with copies of the elements
+        -:  754:       *  in the initializer_list @a __l.  This is linear in l.size().
+        -:  755:       */
+        -:  756:      list&
+        -:  757:      operator=(initializer_list<value_type> __l)
+        -:  758:      {
+        -:  759:	this->assign(__l.begin(), __l.end());
+        -:  760:	return *this;
+        -:  761:      }
+        -:  762:#endif
+        -:  763:
+        -:  764:      /**
+        -:  765:       *  @brief  Assigns a given value to a %list.
+        -:  766:       *  @param  __n  Number of elements to be assigned.
+        -:  767:       *  @param  __val  Value to be assigned.
+        -:  768:       *
+        -:  769:       *  This function fills a %list with @a __n copies of the given
+        -:  770:       *  value.  Note that the assignment completely changes the %list
+        -:  771:       *  and that the resulting %list's size is the same as the number
+        -:  772:       *  of elements assigned.  Old data may be lost.
+        -:  773:       */
+        -:  774:      void
+        -:  775:      assign(size_type __n, const value_type& __val)
+        -:  776:      { _M_fill_assign(__n, __val); }
+        -:  777:
+        -:  778:      /**
+        -:  779:       *  @brief  Assigns a range to a %list.
+        -:  780:       *  @param  __first  An input iterator.
+        -:  781:       *  @param  __last   An input iterator.
+        -:  782:       *
+        -:  783:       *  This function fills a %list with copies of the elements in the
+        -:  784:       *  range [@a __first,@a __last).
+        -:  785:       *
+        -:  786:       *  Note that the assignment completely changes the %list and
+        -:  787:       *  that the resulting %list's size is the same as the number of
+        -:  788:       *  elements assigned.  Old data may be lost.
+        -:  789:       */
+        -:  790:#if __cplusplus >= 201103L
+        -:  791:      template<typename _InputIterator,
+        -:  792:	       typename = std::_RequireInputIter<_InputIterator>>
+        -:  793:        void
+        -:  794:        assign(_InputIterator __first, _InputIterator __last)
+        -:  795:        { _M_assign_dispatch(__first, __last, __false_type()); }
+        -:  796:#else
+        -:  797:      template<typename _InputIterator>
+        -:  798:        void
+        -:  799:        assign(_InputIterator __first, _InputIterator __last)
+        -:  800:        {
+        -:  801:	  // Check whether it's an integral type.  If so, it's not an iterator.
+        -:  802:	  typedef typename std::__is_integer<_InputIterator>::__type _Integral;
+        -:  803:	  _M_assign_dispatch(__first, __last, _Integral());
+        -:  804:	}
+        -:  805:#endif
+        -:  806:
+        -:  807:#if __cplusplus >= 201103L
+        -:  808:      /**
+        -:  809:       *  @brief  Assigns an initializer_list to a %list.
+        -:  810:       *  @param  __l  An initializer_list of value_type.
+        -:  811:       *
+        -:  812:       *  Replace the contents of the %list with copies of the elements
+        -:  813:       *  in the initializer_list @a __l.  This is linear in __l.size().
+        -:  814:       */
+        -:  815:      void
+        -:  816:      assign(initializer_list<value_type> __l)
+        -:  817:      { this->assign(__l.begin(), __l.end()); }
+        -:  818:#endif
+        -:  819:
+        -:  820:      /// Get a copy of the memory allocation object.
+        -:  821:      allocator_type
+        -:  822:      get_allocator() const _GLIBCXX_NOEXCEPT
+        -:  823:      { return _Base::get_allocator(); }
+        -:  824:
+        -:  825:      // iterators
+        -:  826:      /**
+        -:  827:       *  Returns a read/write iterator that points to the first element in the
+        -:  828:       *  %list.  Iteration is done in ordinary element order.
+        -:  829:       */
+        -:  830:      iterator
+        -:  831:      begin() _GLIBCXX_NOEXCEPT
+        -:  832:      { return iterator(this->_M_impl._M_node._M_next); }
+        -:  833:
+        -:  834:      /**
+        -:  835:       *  Returns a read-only (constant) iterator that points to the
+        -:  836:       *  first element in the %list.  Iteration is done in ordinary
+        -:  837:       *  element order.
+        -:  838:       */
+        -:  839:      const_iterator
+function _ZNKSt7__cxx114listIiSaIiEE5beginEv called 4 returned 100% blocks executed 100%
+        4:  840:      begin() const _GLIBCXX_NOEXCEPT
+        4:  841:      { return const_iterator(this->_M_impl._M_node._M_next); }
+call    0 returned 100%
+        -:  842:
+        -:  843:      /**
+        -:  844:       *  Returns a read/write iterator that points one past the last
+        -:  845:       *  element in the %list.  Iteration is done in ordinary element
+        -:  846:       *  order.
+        -:  847:       */
+        -:  848:      iterator
+function _ZNSt7__cxx114listIiSaIiEE3endEv called 14 returned 100% blocks executed 100%
+       14:  849:      end() _GLIBCXX_NOEXCEPT
+       14:  850:      { return iterator(&this->_M_impl._M_node); }
+call    0 returned 100%
+        -:  851:
+        -:  852:      /**
+        -:  853:       *  Returns a read-only (constant) iterator that points one past
+        -:  854:       *  the last element in the %list.  Iteration is done in ordinary
+        -:  855:       *  element order.
+        -:  856:       */
+        -:  857:      const_iterator
+function _ZNKSt7__cxx114listIiSaIiEE3endEv called 4 returned 100% blocks executed 100%
+        4:  858:      end() const _GLIBCXX_NOEXCEPT
+        4:  859:      { return const_iterator(&this->_M_impl._M_node); }
+call    0 returned 100%
+        -:  860:
+        -:  861:      /**
+        -:  862:       *  Returns a read/write reverse iterator that points to the last
+        -:  863:       *  element in the %list.  Iteration is done in reverse element
+        -:  864:       *  order.
+        -:  865:       */
+        -:  866:      reverse_iterator
+        -:  867:      rbegin() _GLIBCXX_NOEXCEPT
+        -:  868:      { return reverse_iterator(end()); }
+        -:  869:
+        -:  870:      /**
+        -:  871:       *  Returns a read-only (constant) reverse iterator that points to
+        -:  872:       *  the last element in the %list.  Iteration is done in reverse
+        -:  873:       *  element order.
+        -:  874:       */
+        -:  875:      const_reverse_iterator
+        -:  876:      rbegin() const _GLIBCXX_NOEXCEPT
+        -:  877:      { return const_reverse_iterator(end()); }
+        -:  878:
+        -:  879:      /**
+        -:  880:       *  Returns a read/write reverse iterator that points to one
+        -:  881:       *  before the first element in the %list.  Iteration is done in
+        -:  882:       *  reverse element order.
+        -:  883:       */
+        -:  884:      reverse_iterator
+        -:  885:      rend() _GLIBCXX_NOEXCEPT
+        -:  886:      { return reverse_iterator(begin()); }
+        -:  887:
+        -:  888:      /**
+        -:  889:       *  Returns a read-only (constant) reverse iterator that points to one
+        -:  890:       *  before the first element in the %list.  Iteration is done in reverse
+        -:  891:       *  element order.
+        -:  892:       */
+        -:  893:      const_reverse_iterator
+        -:  894:      rend() const _GLIBCXX_NOEXCEPT
+        -:  895:      { return const_reverse_iterator(begin()); }
+        -:  896:
+        -:  897:#if __cplusplus >= 201103L
+        -:  898:      /**
+        -:  899:       *  Returns a read-only (constant) iterator that points to the
+        -:  900:       *  first element in the %list.  Iteration is done in ordinary
+        -:  901:       *  element order.
+        -:  902:       */
+        -:  903:      const_iterator
+        -:  904:      cbegin() const noexcept
+        -:  905:      { return const_iterator(this->_M_impl._M_node._M_next); }
+        -:  906:
+        -:  907:      /**
+        -:  908:       *  Returns a read-only (constant) iterator that points one past
+        -:  909:       *  the last element in the %list.  Iteration is done in ordinary
+        -:  910:       *  element order.
+        -:  911:       */
+        -:  912:      const_iterator
+        -:  913:      cend() const noexcept
+        -:  914:      { return const_iterator(&this->_M_impl._M_node); }
+        -:  915:
+        -:  916:      /**
+        -:  917:       *  Returns a read-only (constant) reverse iterator that points to
+        -:  918:       *  the last element in the %list.  Iteration is done in reverse
+        -:  919:       *  element order.
+        -:  920:       */
+        -:  921:      const_reverse_iterator
+        -:  922:      crbegin() const noexcept
+        -:  923:      { return const_reverse_iterator(end()); }
+        -:  924:
+        -:  925:      /**
+        -:  926:       *  Returns a read-only (constant) reverse iterator that points to one
+        -:  927:       *  before the first element in the %list.  Iteration is done in reverse
+        -:  928:       *  element order.
+        -:  929:       */
+        -:  930:      const_reverse_iterator
+        -:  931:      crend() const noexcept
+        -:  932:      { return const_reverse_iterator(begin()); }
+        -:  933:#endif
+        -:  934:
+        -:  935:      // [23.2.2.2] capacity
+        -:  936:      /**
+        -:  937:       *  Returns true if the %list is empty.  (Thus begin() would equal
+        -:  938:       *  end().)
+        -:  939:       */
+        -:  940:      bool
+        -:  941:      empty() const _GLIBCXX_NOEXCEPT
+        -:  942:      { return this->_M_impl._M_node._M_next == &this->_M_impl._M_node; }
+        -:  943:
+        -:  944:      /**  Returns the number of elements in the %list.  */
+        -:  945:      size_type
+        -:  946:      size() const _GLIBCXX_NOEXCEPT
+        -:  947:      { return this->_M_node_count(); }
+        -:  948:
+        -:  949:      /**  Returns the size() of the largest possible %list.  */
+        -:  950:      size_type
+        -:  951:      max_size() const _GLIBCXX_NOEXCEPT
+        -:  952:      { return _M_get_Node_allocator().max_size(); }
+        -:  953:
+        -:  954:#if __cplusplus >= 201103L
+        -:  955:      /**
+        -:  956:       *  @brief Resizes the %list to the specified number of elements.
+        -:  957:       *  @param __new_size Number of elements the %list should contain.
+        -:  958:       *
+        -:  959:       *  This function will %resize the %list to the specified number
+        -:  960:       *  of elements.  If the number is smaller than the %list's
+        -:  961:       *  current size the %list is truncated, otherwise default
+        -:  962:       *  constructed elements are appended.
+        -:  963:       */
+        -:  964:      void
+        -:  965:      resize(size_type __new_size);
+        -:  966:
+        -:  967:      /**
+        -:  968:       *  @brief Resizes the %list to the specified number of elements.
+        -:  969:       *  @param __new_size Number of elements the %list should contain.
+        -:  970:       *  @param __x Data with which new elements should be populated.
+        -:  971:       *
+        -:  972:       *  This function will %resize the %list to the specified number
+        -:  973:       *  of elements.  If the number is smaller than the %list's
+        -:  974:       *  current size the %list is truncated, otherwise the %list is
+        -:  975:       *  extended and new elements are populated with given data.
+        -:  976:       */
+        -:  977:      void
+        -:  978:      resize(size_type __new_size, const value_type& __x);
+        -:  979:#else
+        -:  980:      /**
+        -:  981:       *  @brief Resizes the %list to the specified number of elements.
+        -:  982:       *  @param __new_size Number of elements the %list should contain.
+        -:  983:       *  @param __x Data with which new elements should be populated.
+        -:  984:       *
+        -:  985:       *  This function will %resize the %list to the specified number
+        -:  986:       *  of elements.  If the number is smaller than the %list's
+        -:  987:       *  current size the %list is truncated, otherwise the %list is
+        -:  988:       *  extended and new elements are populated with given data.
+        -:  989:       */
+        -:  990:      void
+        -:  991:      resize(size_type __new_size, value_type __x = value_type());
+        -:  992:#endif
+        -:  993:
+        -:  994:      // element access
+        -:  995:      /**
+        -:  996:       *  Returns a read/write reference to the data at the first
+        -:  997:       *  element of the %list.
+        -:  998:       */
+        -:  999:      reference
+        -: 1000:      front() _GLIBCXX_NOEXCEPT
+        -: 1001:      { return *begin(); }
+        -: 1002:
+        -: 1003:      /**
+        -: 1004:       *  Returns a read-only (constant) reference to the data at the first
+        -: 1005:       *  element of the %list.
+        -: 1006:       */
+        -: 1007:      const_reference
+        -: 1008:      front() const _GLIBCXX_NOEXCEPT
+        -: 1009:      { return *begin(); }
+        -: 1010:
+        -: 1011:      /**
+        -: 1012:       *  Returns a read/write reference to the data at the last element
+        -: 1013:       *  of the %list.
+        -: 1014:       */
+        -: 1015:      reference
+        -: 1016:      back() _GLIBCXX_NOEXCEPT
+        -: 1017:      { 
+        -: 1018:	iterator __tmp = end();
+        -: 1019:	--__tmp;
+        -: 1020:	return *__tmp;
+        -: 1021:      }
+        -: 1022:
+        -: 1023:      /**
+        -: 1024:       *  Returns a read-only (constant) reference to the data at the last
+        -: 1025:       *  element of the %list.
+        -: 1026:       */
+        -: 1027:      const_reference
+        -: 1028:      back() const _GLIBCXX_NOEXCEPT
+        -: 1029:      { 
+        -: 1030:	const_iterator __tmp = end();
+        -: 1031:	--__tmp;
+        -: 1032:	return *__tmp;
+        -: 1033:      }
+        -: 1034:
+        -: 1035:      // [23.2.2.3] modifiers
+        -: 1036:      /**
+        -: 1037:       *  @brief  Add data to the front of the %list.
+        -: 1038:       *  @param  __x  Data to be added.
+        -: 1039:       *
+        -: 1040:       *  This is a typical stack operation.  The function creates an
+        -: 1041:       *  element at the front of the %list and assigns the given data
+        -: 1042:       *  to it.  Due to the nature of a %list this operation can be
+        -: 1043:       *  done in constant time, and does not invalidate iterators and
+        -: 1044:       *  references.
+        -: 1045:       */
+        -: 1046:      void
+        -: 1047:      push_front(const value_type& __x)
+        -: 1048:      { this->_M_insert(begin(), __x); }
+        -: 1049:
+        -: 1050:#if __cplusplus >= 201103L
+        -: 1051:      void
+        -: 1052:      push_front(value_type&& __x)
+        -: 1053:      { this->_M_insert(begin(), std::move(__x)); }
+        -: 1054:
+        -: 1055:      template<typename... _Args>
+        -: 1056:        void
+        -: 1057:        emplace_front(_Args&&... __args)
+        -: 1058:        { this->_M_insert(begin(), std::forward<_Args>(__args)...); }
+        -: 1059:#endif
+        -: 1060:
+        -: 1061:      /**
+        -: 1062:       *  @brief  Removes first element.
+        -: 1063:       *
+        -: 1064:       *  This is a typical stack operation.  It shrinks the %list by
+        -: 1065:       *  one.  Due to the nature of a %list this operation can be done
+        -: 1066:       *  in constant time, and only invalidates iterators/references to
+        -: 1067:       *  the element being removed.
+        -: 1068:       *
+        -: 1069:       *  Note that no data is returned, and if the first element's data
+        -: 1070:       *  is needed, it should be retrieved before pop_front() is
+        -: 1071:       *  called.
+        -: 1072:       */
+        -: 1073:      void
+        -: 1074:      pop_front() _GLIBCXX_NOEXCEPT
+        -: 1075:      { this->_M_erase(begin()); }
+        -: 1076:
+        -: 1077:      /**
+        -: 1078:       *  @brief  Add data to the end of the %list.
+        -: 1079:       *  @param  __x  Data to be added.
+        -: 1080:       *
+        -: 1081:       *  This is a typical stack operation.  The function creates an
+        -: 1082:       *  element at the end of the %list and assigns the given data to
+        -: 1083:       *  it.  Due to the nature of a %list this operation can be done
+        -: 1084:       *  in constant time, and does not invalidate iterators and
+        -: 1085:       *  references.
+        -: 1086:       */
+        -: 1087:      void
+        -: 1088:      push_back(const value_type& __x)
+        -: 1089:      { this->_M_insert(end(), __x); }
+        -: 1090:
+        -: 1091:#if __cplusplus >= 201103L
+        -: 1092:      void
+        -: 1093:      push_back(value_type&& __x)
+        -: 1094:      { this->_M_insert(end(), std::move(__x)); }
+        -: 1095:
+        -: 1096:      template<typename... _Args>
+        -: 1097:        void
+function _ZNSt7__cxx114listIiSaIiEE12emplace_backIJRKiEEEvDpOT_ called 14 returned 100% blocks executed 100%
+       14: 1098:        emplace_back(_Args&&... __args)
+       14: 1099:        { this->_M_insert(end(), std::forward<_Args>(__args)...); }
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+        -: 1100:#endif
+        -: 1101:
+        -: 1102:      /**
+        -: 1103:       *  @brief  Removes last element.
+        -: 1104:       *
+        -: 1105:       *  This is a typical stack operation.  It shrinks the %list by
+        -: 1106:       *  one.  Due to the nature of a %list this operation can be done
+        -: 1107:       *  in constant time, and only invalidates iterators/references to
+        -: 1108:       *  the element being removed.
+        -: 1109:       *
+        -: 1110:       *  Note that no data is returned, and if the last element's data
+        -: 1111:       *  is needed, it should be retrieved before pop_back() is called.
+        -: 1112:       */
+        -: 1113:      void
+        -: 1114:      pop_back() _GLIBCXX_NOEXCEPT
+        -: 1115:      { this->_M_erase(iterator(this->_M_impl._M_node._M_prev)); }
+        -: 1116:
+        -: 1117:#if __cplusplus >= 201103L
+        -: 1118:      /**
+        -: 1119:       *  @brief  Constructs object in %list before specified iterator.
+        -: 1120:       *  @param  __position  A const_iterator into the %list.
+        -: 1121:       *  @param  __args  Arguments.
+        -: 1122:       *  @return  An iterator that points to the inserted data.
+        -: 1123:       *
+        -: 1124:       *  This function will insert an object of type T constructed
+        -: 1125:       *  with T(std::forward<Args>(args)...) before the specified
+        -: 1126:       *  location.  Due to the nature of a %list this operation can
+        -: 1127:       *  be done in constant time, and does not invalidate iterators
+        -: 1128:       *  and references.
+        -: 1129:       */
+        -: 1130:      template<typename... _Args>
+        -: 1131:        iterator
+        -: 1132:        emplace(const_iterator __position, _Args&&... __args);
+        -: 1133:
+        -: 1134:      /**
+        -: 1135:       *  @brief  Inserts given value into %list before specified iterator.
+        -: 1136:       *  @param  __position  A const_iterator into the %list.
+        -: 1137:       *  @param  __x  Data to be inserted.
+        -: 1138:       *  @return  An iterator that points to the inserted data.
+        -: 1139:       *
+        -: 1140:       *  This function will insert a copy of the given value before
+        -: 1141:       *  the specified location.  Due to the nature of a %list this
+        -: 1142:       *  operation can be done in constant time, and does not
+        -: 1143:       *  invalidate iterators and references.
+        -: 1144:       */
+        -: 1145:      iterator
+        -: 1146:      insert(const_iterator __position, const value_type& __x);
+        -: 1147:#else
+        -: 1148:      /**
+        -: 1149:       *  @brief  Inserts given value into %list before specified iterator.
+        -: 1150:       *  @param  __position  An iterator into the %list.
+        -: 1151:       *  @param  __x  Data to be inserted.
+        -: 1152:       *  @return  An iterator that points to the inserted data.
+        -: 1153:       *
+        -: 1154:       *  This function will insert a copy of the given value before
+        -: 1155:       *  the specified location.  Due to the nature of a %list this
+        -: 1156:       *  operation can be done in constant time, and does not
+        -: 1157:       *  invalidate iterators and references.
+        -: 1158:       */
+        -: 1159:      iterator
+        -: 1160:      insert(iterator __position, const value_type& __x);
+        -: 1161:#endif
+        -: 1162:
+        -: 1163:#if __cplusplus >= 201103L
+        -: 1164:      /**
+        -: 1165:       *  @brief  Inserts given rvalue into %list before specified iterator.
+        -: 1166:       *  @param  __position  A const_iterator into the %list.
+        -: 1167:       *  @param  __x  Data to be inserted.
+        -: 1168:       *  @return  An iterator that points to the inserted data.
+        -: 1169:       *
+        -: 1170:       *  This function will insert a copy of the given rvalue before
+        -: 1171:       *  the specified location.  Due to the nature of a %list this
+        -: 1172:       *  operation can be done in constant time, and does not
+        -: 1173:       *  invalidate iterators and references.
+        -: 1174:        */
+        -: 1175:      iterator
+        -: 1176:      insert(const_iterator __position, value_type&& __x)
+        -: 1177:      { return emplace(__position, std::move(__x)); }
+        -: 1178:
+        -: 1179:      /**
+        -: 1180:       *  @brief  Inserts the contents of an initializer_list into %list
+        -: 1181:       *          before specified const_iterator.
+        -: 1182:       *  @param  __p  A const_iterator into the %list.
+        -: 1183:       *  @param  __l  An initializer_list of value_type.
+        -: 1184:       *  @return  An iterator pointing to the first element inserted
+        -: 1185:       *           (or __position).
+        -: 1186:       *
+        -: 1187:       *  This function will insert copies of the data in the
+        -: 1188:       *  initializer_list @a l into the %list before the location
+        -: 1189:       *  specified by @a p.
+        -: 1190:       *
+        -: 1191:       *  This operation is linear in the number of elements inserted and
+        -: 1192:       *  does not invalidate iterators and references.
+        -: 1193:       */
+        -: 1194:      iterator
+        -: 1195:      insert(const_iterator __p, initializer_list<value_type> __l)
+        -: 1196:      { return this->insert(__p, __l.begin(), __l.end()); }
+        -: 1197:#endif
+        -: 1198:
+        -: 1199:#if __cplusplus >= 201103L
+        -: 1200:      /**
+        -: 1201:       *  @brief  Inserts a number of copies of given data into the %list.
+        -: 1202:       *  @param  __position  A const_iterator into the %list.
+        -: 1203:       *  @param  __n  Number of elements to be inserted.
+        -: 1204:       *  @param  __x  Data to be inserted.
+        -: 1205:       *  @return  An iterator pointing to the first element inserted
+        -: 1206:       *           (or __position).
+        -: 1207:       *
+        -: 1208:       *  This function will insert a specified number of copies of the
+        -: 1209:       *  given data before the location specified by @a position.
+        -: 1210:       *
+        -: 1211:       *  This operation is linear in the number of elements inserted and
+        -: 1212:       *  does not invalidate iterators and references.
+        -: 1213:       */
+        -: 1214:      iterator
+        -: 1215:      insert(const_iterator __position, size_type __n, const value_type& __x);
+        -: 1216:#else
+        -: 1217:      /**
+        -: 1218:       *  @brief  Inserts a number of copies of given data into the %list.
+        -: 1219:       *  @param  __position  An iterator into the %list.
+        -: 1220:       *  @param  __n  Number of elements to be inserted.
+        -: 1221:       *  @param  __x  Data to be inserted.
+        -: 1222:       *
+        -: 1223:       *  This function will insert a specified number of copies of the
+        -: 1224:       *  given data before the location specified by @a position.
+        -: 1225:       *
+        -: 1226:       *  This operation is linear in the number of elements inserted and
+        -: 1227:       *  does not invalidate iterators and references.
+        -: 1228:       */
+        -: 1229:      void
+        -: 1230:      insert(iterator __position, size_type __n, const value_type& __x)
+        -: 1231:      {
+        -: 1232:	list __tmp(__n, __x, get_allocator());
+        -: 1233:	splice(__position, __tmp);
+        -: 1234:      }
+        -: 1235:#endif
+        -: 1236:
+        -: 1237:#if __cplusplus >= 201103L
+        -: 1238:      /**
+        -: 1239:       *  @brief  Inserts a range into the %list.
+        -: 1240:       *  @param  __position  A const_iterator into the %list.
+        -: 1241:       *  @param  __first  An input iterator.
+        -: 1242:       *  @param  __last   An input iterator.
+        -: 1243:       *  @return  An iterator pointing to the first element inserted
+        -: 1244:       *           (or __position).
+        -: 1245:       *
+        -: 1246:       *  This function will insert copies of the data in the range [@a
+        -: 1247:       *  first,@a last) into the %list before the location specified by
+        -: 1248:       *  @a position.
+        -: 1249:       *
+        -: 1250:       *  This operation is linear in the number of elements inserted and
+        -: 1251:       *  does not invalidate iterators and references.
+        -: 1252:       */
+        -: 1253:      template<typename _InputIterator,
+        -: 1254:	       typename = std::_RequireInputIter<_InputIterator>>
+        -: 1255:	iterator
+        -: 1256:	insert(const_iterator __position, _InputIterator __first,
+        -: 1257:	       _InputIterator __last);
+        -: 1258:#else
+        -: 1259:      /**
+        -: 1260:       *  @brief  Inserts a range into the %list.
+        -: 1261:       *  @param  __position  An iterator into the %list.
+        -: 1262:       *  @param  __first  An input iterator.
+        -: 1263:       *  @param  __last   An input iterator.
+        -: 1264:       *
+        -: 1265:       *  This function will insert copies of the data in the range [@a
+        -: 1266:       *  first,@a last) into the %list before the location specified by
+        -: 1267:       *  @a position.
+        -: 1268:       *
+        -: 1269:       *  This operation is linear in the number of elements inserted and
+        -: 1270:       *  does not invalidate iterators and references.
+        -: 1271:       */
+        -: 1272:      template<typename _InputIterator>
+        -: 1273:        void
+        -: 1274:        insert(iterator __position, _InputIterator __first,
+        -: 1275:	       _InputIterator __last)
+        -: 1276:        {
+        -: 1277:	  list __tmp(__first, __last, get_allocator());
+        -: 1278:	  splice(__position, __tmp);
+        -: 1279:	}
+        -: 1280:#endif
+        -: 1281:
+        -: 1282:      /**
+        -: 1283:       *  @brief  Remove element at given position.
+        -: 1284:       *  @param  __position  Iterator pointing to element to be erased.
+        -: 1285:       *  @return  An iterator pointing to the next element (or end()).
+        -: 1286:       *
+        -: 1287:       *  This function will erase the element at the given position and thus
+        -: 1288:       *  shorten the %list by one.
+        -: 1289:       *
+        -: 1290:       *  Due to the nature of a %list this operation can be done in
+        -: 1291:       *  constant time, and only invalidates iterators/references to
+        -: 1292:       *  the element being removed.  The user is also cautioned that
+        -: 1293:       *  this function only erases the element, and that if the element
+        -: 1294:       *  is itself a pointer, the pointed-to memory is not touched in
+        -: 1295:       *  any way.  Managing the pointer is the user's responsibility.
+        -: 1296:       */
+        -: 1297:      iterator
+        -: 1298:#if __cplusplus >= 201103L
+        -: 1299:      erase(const_iterator __position) noexcept;
+        -: 1300:#else
+        -: 1301:      erase(iterator __position);
+        -: 1302:#endif
+        -: 1303:
+        -: 1304:      /**
+        -: 1305:       *  @brief  Remove a range of elements.
+        -: 1306:       *  @param  __first  Iterator pointing to the first element to be erased.
+        -: 1307:       *  @param  __last  Iterator pointing to one past the last element to be
+        -: 1308:       *                erased.
+        -: 1309:       *  @return  An iterator pointing to the element pointed to by @a last
+        -: 1310:       *           prior to erasing (or end()).
+        -: 1311:       *
+        -: 1312:       *  This function will erase the elements in the range @a
+        -: 1313:       *  [first,last) and shorten the %list accordingly.
+        -: 1314:       *
+        -: 1315:       *  This operation is linear time in the size of the range and only
+        -: 1316:       *  invalidates iterators/references to the element being removed.
+        -: 1317:       *  The user is also cautioned that this function only erases the
+        -: 1318:       *  elements, and that if the elements themselves are pointers, the
+        -: 1319:       *  pointed-to memory is not touched in any way.  Managing the pointer
+        -: 1320:       *  is the user's responsibility.
+        -: 1321:       */
+        -: 1322:      iterator
+        -: 1323:#if __cplusplus >= 201103L
+        -: 1324:      erase(const_iterator __first, const_iterator __last) noexcept
+        -: 1325:#else
+        -: 1326:      erase(iterator __first, iterator __last)
+        -: 1327:#endif
+        -: 1328:      {
+        -: 1329:	while (__first != __last)
+        -: 1330:	  __first = erase(__first);
+        -: 1331:	return __last._M_const_cast();
+        -: 1332:      }
+        -: 1333:
+        -: 1334:      /**
+        -: 1335:       *  @brief  Swaps data with another %list.
+        -: 1336:       *  @param  __x  A %list of the same element and allocator types.
+        -: 1337:       *
+        -: 1338:       *  This exchanges the elements between two lists in constant
+        -: 1339:       *  time.  Note that the global std::swap() function is
+        -: 1340:       *  specialized such that std::swap(l1,l2) will feed to this
+        -: 1341:       *  function.
+        -: 1342:       */
+        -: 1343:      void
+        -: 1344:      swap(list& __x)
+        -: 1345:      {
+        -: 1346:	__detail::_List_node_base::swap(this->_M_impl._M_node, 
+        -: 1347:					__x._M_impl._M_node);
+        -: 1348:
+        -: 1349:	size_t __xsize = __x._M_get_size();
+        -: 1350:	__x._M_set_size(this->_M_get_size());
+        -: 1351:	this->_M_set_size(__xsize);
+        -: 1352:
+        -: 1353:	// _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1354:	// 431. Swapping containers with unequal allocators.
+        -: 1355:	std::__alloc_swap<typename _Base::_Node_alloc_type>::
+        -: 1356:	  _S_do_it(_M_get_Node_allocator(), __x._M_get_Node_allocator());
+        -: 1357:      }
+        -: 1358:
+        -: 1359:      /**
+        -: 1360:       *  Erases all the elements.  Note that this function only erases
+        -: 1361:       *  the elements, and that if the elements themselves are
+        -: 1362:       *  pointers, the pointed-to memory is not touched in any way.
+        -: 1363:       *  Managing the pointer is the user's responsibility.
+        -: 1364:       */
+        -: 1365:      void
+        -: 1366:      clear() _GLIBCXX_NOEXCEPT
+        -: 1367:      {
+        -: 1368:        _Base::_M_clear();
+        -: 1369:        _Base::_M_init();
+        -: 1370:      }
+        -: 1371:
+        -: 1372:      // [23.2.2.4] list operations
+        -: 1373:      /**
+        -: 1374:       *  @brief  Insert contents of another %list.
+        -: 1375:       *  @param  __position  Iterator referencing the element to insert before.
+        -: 1376:       *  @param  __x  Source list.
+        -: 1377:       *
+        -: 1378:       *  The elements of @a __x are inserted in constant time in front of
+        -: 1379:       *  the element referenced by @a __position.  @a __x becomes an empty
+        -: 1380:       *  list.
+        -: 1381:       *
+        -: 1382:       *  Requires this != @a __x.
+        -: 1383:       */
+        -: 1384:      void
+        -: 1385:#if __cplusplus >= 201103L
+        -: 1386:      splice(const_iterator __position, list&& __x) noexcept
+        -: 1387:#else
+        -: 1388:      splice(iterator __position, list& __x)
+        -: 1389:#endif
+        -: 1390:      {
+        -: 1391:	if (!__x.empty())
+        -: 1392:	  {
+        -: 1393:	    _M_check_equal_allocators(__x);
+        -: 1394:
+        -: 1395:	    this->_M_transfer(__position._M_const_cast(),
+        -: 1396:			      __x.begin(), __x.end());
+        -: 1397:
+        -: 1398:	    this->_M_inc_size(__x._M_get_size());
+        -: 1399:	    __x._M_set_size(0);
+        -: 1400:	  }
+        -: 1401:      }
+        -: 1402:
+        -: 1403:#if __cplusplus >= 201103L
+        -: 1404:      void
+        -: 1405:      splice(const_iterator __position, list& __x) noexcept
+        -: 1406:      { splice(__position, std::move(__x)); }
+        -: 1407:#endif
+        -: 1408:
+        -: 1409:#if __cplusplus >= 201103L
+        -: 1410:      /**
+        -: 1411:       *  @brief  Insert element from another %list.
+        -: 1412:       *  @param  __position  Const_iterator referencing the element to
+        -: 1413:       *                      insert before.
+        -: 1414:       *  @param  __x  Source list.
+        -: 1415:       *  @param  __i  Const_iterator referencing the element to move.
+        -: 1416:       *
+        -: 1417:       *  Removes the element in list @a __x referenced by @a __i and
+        -: 1418:       *  inserts it into the current list before @a __position.
+        -: 1419:       */
+        -: 1420:      void
+        -: 1421:      splice(const_iterator __position, list&& __x, const_iterator __i) noexcept
+        -: 1422:#else
+        -: 1423:      /**
+        -: 1424:       *  @brief  Insert element from another %list.
+        -: 1425:       *  @param  __position  Iterator referencing the element to insert before.
+        -: 1426:       *  @param  __x  Source list.
+        -: 1427:       *  @param  __i  Iterator referencing the element to move.
+        -: 1428:       *
+        -: 1429:       *  Removes the element in list @a __x referenced by @a __i and
+        -: 1430:       *  inserts it into the current list before @a __position.
+        -: 1431:       */
+        -: 1432:      void
+        -: 1433:      splice(iterator __position, list& __x, iterator __i)
+        -: 1434:#endif
+        -: 1435:      {
+        -: 1436:	iterator __j = __i._M_const_cast();
+        -: 1437:	++__j;
+        -: 1438:	if (__position == __i || __position == __j)
+        -: 1439:	  return;
+        -: 1440:
+        -: 1441:	if (this != &__x)
+        -: 1442:	  _M_check_equal_allocators(__x);
+        -: 1443:
+        -: 1444:	this->_M_transfer(__position._M_const_cast(),
+        -: 1445:			  __i._M_const_cast(), __j);
+        -: 1446:
+        -: 1447:	this->_M_inc_size(1);
+        -: 1448:	__x._M_dec_size(1);
+        -: 1449:      }
+        -: 1450:
+        -: 1451:#if __cplusplus >= 201103L
+        -: 1452:      /**
+        -: 1453:       *  @brief  Insert element from another %list.
+        -: 1454:       *  @param  __position  Const_iterator referencing the element to
+        -: 1455:       *                      insert before.
+        -: 1456:       *  @param  __x  Source list.
+        -: 1457:       *  @param  __i  Const_iterator referencing the element to move.
+        -: 1458:       *
+        -: 1459:       *  Removes the element in list @a __x referenced by @a __i and
+        -: 1460:       *  inserts it into the current list before @a __position.
+        -: 1461:       */
+        -: 1462:      void
+        -: 1463:      splice(const_iterator __position, list& __x, const_iterator __i) noexcept
+        -: 1464:      { splice(__position, std::move(__x), __i); }
+        -: 1465:#endif
+        -: 1466:
+        -: 1467:#if __cplusplus >= 201103L
+        -: 1468:      /**
+        -: 1469:       *  @brief  Insert range from another %list.
+        -: 1470:       *  @param  __position  Const_iterator referencing the element to
+        -: 1471:       *                      insert before.
+        -: 1472:       *  @param  __x  Source list.
+        -: 1473:       *  @param  __first  Const_iterator referencing the start of range in x.
+        -: 1474:       *  @param  __last  Const_iterator referencing the end of range in x.
+        -: 1475:       *
+        -: 1476:       *  Removes elements in the range [__first,__last) and inserts them
+        -: 1477:       *  before @a __position in constant time.
+        -: 1478:       *
+        -: 1479:       *  Undefined if @a __position is in [__first,__last).
+        -: 1480:       */
+        -: 1481:      void
+        -: 1482:      splice(const_iterator __position, list&& __x, const_iterator __first,
+        -: 1483:	     const_iterator __last) noexcept
+        -: 1484:#else
+        -: 1485:      /**
+        -: 1486:       *  @brief  Insert range from another %list.
+        -: 1487:       *  @param  __position  Iterator referencing the element to insert before.
+        -: 1488:       *  @param  __x  Source list.
+        -: 1489:       *  @param  __first  Iterator referencing the start of range in x.
+        -: 1490:       *  @param  __last  Iterator referencing the end of range in x.
+        -: 1491:       *
+        -: 1492:       *  Removes elements in the range [__first,__last) and inserts them
+        -: 1493:       *  before @a __position in constant time.
+        -: 1494:       *
+        -: 1495:       *  Undefined if @a __position is in [__first,__last).
+        -: 1496:       */
+        -: 1497:      void
+        -: 1498:      splice(iterator __position, list& __x, iterator __first,
+        -: 1499:	     iterator __last)
+        -: 1500:#endif
+        -: 1501:      {
+        -: 1502:	if (__first != __last)
+        -: 1503:	  {
+        -: 1504:	    if (this != &__x)
+        -: 1505:	      _M_check_equal_allocators(__x);
+        -: 1506:
+        -: 1507:	    size_t __n = this->_M_distance(__first._M_node, __last._M_node);
+        -: 1508:	    this->_M_inc_size(__n);
+        -: 1509:	    __x._M_dec_size(__n);
+        -: 1510:
+        -: 1511:	    this->_M_transfer(__position._M_const_cast(),
+        -: 1512:			      __first._M_const_cast(),
+        -: 1513:			      __last._M_const_cast());
+        -: 1514:	  }
+        -: 1515:      }
+        -: 1516:
+        -: 1517:#if __cplusplus >= 201103L
+        -: 1518:      /**
+        -: 1519:       *  @brief  Insert range from another %list.
+        -: 1520:       *  @param  __position  Const_iterator referencing the element to
+        -: 1521:       *                      insert before.
+        -: 1522:       *  @param  __x  Source list.
+        -: 1523:       *  @param  __first  Const_iterator referencing the start of range in x.
+        -: 1524:       *  @param  __last  Const_iterator referencing the end of range in x.
+        -: 1525:       *
+        -: 1526:       *  Removes elements in the range [__first,__last) and inserts them
+        -: 1527:       *  before @a __position in constant time.
+        -: 1528:       *
+        -: 1529:       *  Undefined if @a __position is in [__first,__last).
+        -: 1530:       */
+        -: 1531:      void
+        -: 1532:      splice(const_iterator __position, list& __x, const_iterator __first,
+        -: 1533:	     const_iterator __last) noexcept
+        -: 1534:      { splice(__position, std::move(__x), __first, __last); }
+        -: 1535:#endif
+        -: 1536:
+        -: 1537:      /**
+        -: 1538:       *  @brief  Remove all elements equal to value.
+        -: 1539:       *  @param  __value  The value to remove.
+        -: 1540:       *
+        -: 1541:       *  Removes every element in the list equal to @a value.
+        -: 1542:       *  Remaining elements stay in list order.  Note that this
+        -: 1543:       *  function only erases the elements, and that if the elements
+        -: 1544:       *  themselves are pointers, the pointed-to memory is not
+        -: 1545:       *  touched in any way.  Managing the pointer is the user's
+        -: 1546:       *  responsibility.
+        -: 1547:       */
+        -: 1548:      void
+        -: 1549:      remove(const _Tp& __value);
+        -: 1550:
+        -: 1551:      /**
+        -: 1552:       *  @brief  Remove all elements satisfying a predicate.
+        -: 1553:       *  @tparam  _Predicate  Unary predicate function or object.
+        -: 1554:       *
+        -: 1555:       *  Removes every element in the list for which the predicate
+        -: 1556:       *  returns true.  Remaining elements stay in list order.  Note
+        -: 1557:       *  that this function only erases the elements, and that if the
+        -: 1558:       *  elements themselves are pointers, the pointed-to memory is
+        -: 1559:       *  not touched in any way.  Managing the pointer is the user's
+        -: 1560:       *  responsibility.
+        -: 1561:       */
+        -: 1562:      template<typename _Predicate>
+        -: 1563:        void
+        -: 1564:        remove_if(_Predicate);
+        -: 1565:
+        -: 1566:      /**
+        -: 1567:       *  @brief  Remove consecutive duplicate elements.
+        -: 1568:       *
+        -: 1569:       *  For each consecutive set of elements with the same value,
+        -: 1570:       *  remove all but the first one.  Remaining elements stay in
+        -: 1571:       *  list order.  Note that this function only erases the
+        -: 1572:       *  elements, and that if the elements themselves are pointers,
+        -: 1573:       *  the pointed-to memory is not touched in any way.  Managing
+        -: 1574:       *  the pointer is the user's responsibility.
+        -: 1575:       */
+        -: 1576:      void
+        -: 1577:      unique();
+        -: 1578:
+        -: 1579:      /**
+        -: 1580:       *  @brief  Remove consecutive elements satisfying a predicate.
+        -: 1581:       *  @tparam _BinaryPredicate  Binary predicate function or object.
+        -: 1582:       *
+        -: 1583:       *  For each consecutive set of elements [first,last) that
+        -: 1584:       *  satisfy predicate(first,i) where i is an iterator in
+        -: 1585:       *  [first,last), remove all but the first one.  Remaining
+        -: 1586:       *  elements stay in list order.  Note that this function only
+        -: 1587:       *  erases the elements, and that if the elements themselves are
+        -: 1588:       *  pointers, the pointed-to memory is not touched in any way.
+        -: 1589:       *  Managing the pointer is the user's responsibility.
+        -: 1590:       */
+        -: 1591:      template<typename _BinaryPredicate>
+        -: 1592:        void
+        -: 1593:        unique(_BinaryPredicate);
+        -: 1594:
+        -: 1595:      /**
+        -: 1596:       *  @brief  Merge sorted lists.
+        -: 1597:       *  @param  __x  Sorted list to merge.
+        -: 1598:       *
+        -: 1599:       *  Assumes that both @a __x and this list are sorted according to
+        -: 1600:       *  operator<().  Merges elements of @a __x into this list in
+        -: 1601:       *  sorted order, leaving @a __x empty when complete.  Elements in
+        -: 1602:       *  this list precede elements in @a __x that are equal.
+        -: 1603:       */
+        -: 1604:#if __cplusplus >= 201103L
+        -: 1605:      void
+        -: 1606:      merge(list&& __x);
+        -: 1607:
+        -: 1608:      void
+        -: 1609:      merge(list& __x)
+        -: 1610:      { merge(std::move(__x)); }
+        -: 1611:#else
+        -: 1612:      void
+        -: 1613:      merge(list& __x);
+        -: 1614:#endif
+        -: 1615:
+        -: 1616:      /**
+        -: 1617:       *  @brief  Merge sorted lists according to comparison function.
+        -: 1618:       *  @tparam _StrictWeakOrdering Comparison function defining
+        -: 1619:       *  sort order.
+        -: 1620:       *  @param  __x  Sorted list to merge.
+        -: 1621:       *  @param  __comp  Comparison functor.
+        -: 1622:       *
+        -: 1623:       *  Assumes that both @a __x and this list are sorted according to
+        -: 1624:       *  StrictWeakOrdering.  Merges elements of @a __x into this list
+        -: 1625:       *  in sorted order, leaving @a __x empty when complete.  Elements
+        -: 1626:       *  in this list precede elements in @a __x that are equivalent
+        -: 1627:       *  according to StrictWeakOrdering().
+        -: 1628:       */
+        -: 1629:#if __cplusplus >= 201103L
+        -: 1630:      template<typename _StrictWeakOrdering>
+        -: 1631:        void
+        -: 1632:        merge(list&& __x, _StrictWeakOrdering __comp);
+        -: 1633:
+        -: 1634:      template<typename _StrictWeakOrdering>
+        -: 1635:        void
+        -: 1636:        merge(list& __x, _StrictWeakOrdering __comp)
+        -: 1637:        { merge(std::move(__x), __comp); }
+        -: 1638:#else
+        -: 1639:      template<typename _StrictWeakOrdering>
+        -: 1640:        void
+        -: 1641:        merge(list& __x, _StrictWeakOrdering __comp);
+        -: 1642:#endif
+        -: 1643:
+        -: 1644:      /**
+        -: 1645:       *  @brief  Reverse the elements in list.
+        -: 1646:       *
+        -: 1647:       *  Reverse the order of elements in the list in linear time.
+        -: 1648:       */
+        -: 1649:      void
+        -: 1650:      reverse() _GLIBCXX_NOEXCEPT
+        -: 1651:      { this->_M_impl._M_node._M_reverse(); }
+        -: 1652:
+        -: 1653:      /**
+        -: 1654:       *  @brief  Sort the elements.
+        -: 1655:       *
+        -: 1656:       *  Sorts the elements of this list in NlogN time.  Equivalent
+        -: 1657:       *  elements remain in list order.
+        -: 1658:       */
+        -: 1659:      void
+        -: 1660:      sort();
+        -: 1661:
+        -: 1662:      /**
+        -: 1663:       *  @brief  Sort the elements according to comparison function.
+        -: 1664:       *
+        -: 1665:       *  Sorts the elements of this list in NlogN time.  Equivalent
+        -: 1666:       *  elements remain in list order.
+        -: 1667:       */
+        -: 1668:      template<typename _StrictWeakOrdering>
+        -: 1669:        void
+        -: 1670:        sort(_StrictWeakOrdering);
+        -: 1671:
+        -: 1672:    protected:
+        -: 1673:      // Internal constructor functions follow.
+        -: 1674:
+        -: 1675:      // Called by the range constructor to implement [23.1.1]/9
+        -: 1676:
+        -: 1677:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1678:      // 438. Ambiguity in the "do the right thing" clause
+        -: 1679:      template<typename _Integer>
+        -: 1680:        void
+        -: 1681:        _M_initialize_dispatch(_Integer __n, _Integer __x, __true_type)
+        -: 1682:        { _M_fill_initialize(static_cast<size_type>(__n), __x); }
+        -: 1683:
+        -: 1684:      // Called by the range constructor to implement [23.1.1]/9
+        -: 1685:      template<typename _InputIterator>
+        -: 1686:        void
+function _ZNSt7__cxx114listIiSaIiEE22_M_initialize_dispatchIPKiEEvT_S6_St12__false_type called 4 returned 100% blocks executed 100%
+       18: 1687:        _M_initialize_dispatch(_InputIterator __first, _InputIterator __last,
+        -: 1688:			       __false_type)
+        -: 1689:        {
+       32: 1690:	  for (; __first != __last; ++__first)
+branch  0 taken 78% (fallthrough)
+branch  1 taken 22%
+        -: 1691:#if __cplusplus >= 201103L
+       14: 1692:	    emplace_back(*__first);
+call    0 returned 100%
+        -: 1693:#else
+        -: 1694:	    push_back(*__first);
+        -: 1695:#endif
+        4: 1696:	}
+        -: 1697:
+        -: 1698:      // Called by list(n,v,a), and the range constructor when it turns out
+        -: 1699:      // to be the same thing.
+        -: 1700:      void
+        -: 1701:      _M_fill_initialize(size_type __n, const value_type& __x)
+        -: 1702:      {
+        -: 1703:	for (; __n; --__n)
+        -: 1704:	  push_back(__x);
+        -: 1705:      }
+        -: 1706:
+        -: 1707:#if __cplusplus >= 201103L
+        -: 1708:      // Called by list(n).
+        -: 1709:      void
+        -: 1710:      _M_default_initialize(size_type __n)
+        -: 1711:      {
+        -: 1712:	for (; __n; --__n)
+        -: 1713:	  emplace_back();
+        -: 1714:      }
+        -: 1715:
+        -: 1716:      // Called by resize(sz).
+        -: 1717:      void
+        -: 1718:      _M_default_append(size_type __n);
+        -: 1719:#endif
+        -: 1720:
+        -: 1721:      // Internal assign functions follow.
+        -: 1722:
+        -: 1723:      // Called by the range assign to implement [23.1.1]/9
+        -: 1724:
+        -: 1725:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1726:      // 438. Ambiguity in the "do the right thing" clause
+        -: 1727:      template<typename _Integer>
+        -: 1728:        void
+        -: 1729:        _M_assign_dispatch(_Integer __n, _Integer __val, __true_type)
+        -: 1730:        { _M_fill_assign(__n, __val); }
+        -: 1731:
+        -: 1732:      // Called by the range assign to implement [23.1.1]/9
+        -: 1733:      template<typename _InputIterator>
+        -: 1734:        void
+        -: 1735:        _M_assign_dispatch(_InputIterator __first, _InputIterator __last,
+        -: 1736:			   __false_type);
+        -: 1737:
+        -: 1738:      // Called by assign(n,t), and the range assign when it turns out
+        -: 1739:      // to be the same thing.
+        -: 1740:      void
+        -: 1741:      _M_fill_assign(size_type __n, const value_type& __val);
+        -: 1742:
+        -: 1743:
+        -: 1744:      // Moves the elements from [first,last) before position.
+        -: 1745:      void
+        -: 1746:      _M_transfer(iterator __position, iterator __first, iterator __last)
+        -: 1747:      { __position._M_node->_M_transfer(__first._M_node, __last._M_node); }
+        -: 1748:
+        -: 1749:      // Inserts new element at position given and with value given.
+        -: 1750:#if __cplusplus < 201103L
+        -: 1751:      void
+        -: 1752:      _M_insert(iterator __position, const value_type& __x)
+        -: 1753:      {
+        -: 1754:        _Node* __tmp = _M_create_node(__x);
+        -: 1755:        __tmp->_M_hook(__position._M_node);
+        -: 1756:	this->_M_inc_size(1);
+        -: 1757:      }
+        -: 1758:#else
+        -: 1759:     template<typename... _Args>
+        -: 1760:       void
+function _ZNSt7__cxx114listIiSaIiEE9_M_insertIJRKiEEEvSt14_List_iteratorIiEDpOT_ called 14 returned 100% blocks executed 100%
+       14: 1761:       _M_insert(iterator __position, _Args&&... __args)
+        -: 1762:       {
+       14: 1763:	 _Node* __tmp = _M_create_node(std::forward<_Args>(__args)...);
+call    0 returned 100%
+call    1 returned 100%
+       14: 1764:	 __tmp->_M_hook(__position._M_node);
+call    0 returned 100%
+       14: 1765:	 this->_M_inc_size(1);
+call    0 returned 100%
+       14: 1766:       }
+        -: 1767:#endif
+        -: 1768:
+        -: 1769:      // Erases element at position given.
+        -: 1770:      void
+        -: 1771:      _M_erase(iterator __position) _GLIBCXX_NOEXCEPT
+        -: 1772:      {
+        -: 1773:	this->_M_dec_size(1);
+        -: 1774:        __position._M_node->_M_unhook();
+        -: 1775:        _Node* __n = static_cast<_Node*>(__position._M_node);
+        -: 1776:#if __cplusplus >= 201103L
+        -: 1777:        _M_get_Node_allocator().destroy(__n);
+        -: 1778:#else
+        -: 1779:	_M_get_Tp_allocator().destroy(std::__addressof(__n->_M_data));
+        -: 1780:#endif
+        -: 1781:        _M_put_node(__n);
+        -: 1782:      }
+        -: 1783:
+        -: 1784:      // To implement the splice (and merge) bits of N1599.
+        -: 1785:      void
+        -: 1786:      _M_check_equal_allocators(list& __x) _GLIBCXX_NOEXCEPT
+        -: 1787:      {
+        -: 1788:	if (std::__alloc_neq<typename _Base::_Node_alloc_type>::
+        -: 1789:	    _S_do_it(_M_get_Node_allocator(), __x._M_get_Node_allocator()))
+        -: 1790:	  __builtin_abort();
+        -: 1791:      }
+        -: 1792:    };
+        -: 1793:_GLIBCXX_END_NAMESPACE_CXX11
+        -: 1794:
+        -: 1795:  /**
+        -: 1796:   *  @brief  List equality comparison.
+        -: 1797:   *  @param  __x  A %list.
+        -: 1798:   *  @param  __y  A %list of the same type as @a __x.
+        -: 1799:   *  @return  True iff the size and elements of the lists are equal.
+        -: 1800:   *
+        -: 1801:   *  This is an equivalence relation.  It is linear in the size of
+        -: 1802:   *  the lists.  Lists are considered equivalent if their sizes are
+        -: 1803:   *  equal, and if corresponding elements compare equal.
+        -: 1804:  */
+        -: 1805:  template<typename _Tp, typename _Alloc>
+        -: 1806:    inline bool
+        -: 1807:    operator==(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        -: 1808:    {
+        -: 1809:      typedef typename list<_Tp, _Alloc>::const_iterator const_iterator;
+        -: 1810:      const_iterator __end1 = __x.end();
+        -: 1811:      const_iterator __end2 = __y.end();
+        -: 1812:
+        -: 1813:      const_iterator __i1 = __x.begin();
+        -: 1814:      const_iterator __i2 = __y.begin();
+        -: 1815:      while (__i1 != __end1 && __i2 != __end2 && *__i1 == *__i2)
+        -: 1816:	{
+        -: 1817:	  ++__i1;
+        -: 1818:	  ++__i2;
+        -: 1819:	}
+        -: 1820:      return __i1 == __end1 && __i2 == __end2;
+        -: 1821:    }
+        -: 1822:
+        -: 1823:  /**
+        -: 1824:   *  @brief  List ordering relation.
+        -: 1825:   *  @param  __x  A %list.
+        -: 1826:   *  @param  __y  A %list of the same type as @a __x.
+        -: 1827:   *  @return  True iff @a __x is lexicographically less than @a __y.
+        -: 1828:   *
+        -: 1829:   *  This is a total ordering relation.  It is linear in the size of the
+        -: 1830:   *  lists.  The elements must be comparable with @c <.
+        -: 1831:   *
+        -: 1832:   *  See std::lexicographical_compare() for how the determination is made.
+        -: 1833:  */
+        -: 1834:  template<typename _Tp, typename _Alloc>
+        -: 1835:    inline bool
+        -: 1836:    operator<(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        -: 1837:    { return std::lexicographical_compare(__x.begin(), __x.end(),
+        -: 1838:					  __y.begin(), __y.end()); }
+        -: 1839:
+        -: 1840:  /// Based on operator==
+        -: 1841:  template<typename _Tp, typename _Alloc>
+        -: 1842:    inline bool
+        -: 1843:    operator!=(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        -: 1844:    { return !(__x == __y); }
+        -: 1845:
+        -: 1846:  /// Based on operator<
+        -: 1847:  template<typename _Tp, typename _Alloc>
+        -: 1848:    inline bool
+        -: 1849:    operator>(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        -: 1850:    { return __y < __x; }
+        -: 1851:
+        -: 1852:  /// Based on operator<
+        -: 1853:  template<typename _Tp, typename _Alloc>
+        -: 1854:    inline bool
+        -: 1855:    operator<=(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        -: 1856:    { return !(__y < __x); }
+        -: 1857:
+        -: 1858:  /// Based on operator<
+        -: 1859:  template<typename _Tp, typename _Alloc>
+        -: 1860:    inline bool
+        -: 1861:    operator>=(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        -: 1862:    { return !(__x < __y); }
+        -: 1863:
+        -: 1864:  /// See std::list::swap().
+        -: 1865:  template<typename _Tp, typename _Alloc>
+        -: 1866:    inline void
+        -: 1867:    swap(list<_Tp, _Alloc>& __x, list<_Tp, _Alloc>& __y)
+        -: 1868:    { __x.swap(__y); }
+        -: 1869:
+        -: 1870:_GLIBCXX_END_NAMESPACE_CONTAINER
+        -: 1871:} // namespace std
+        -: 1872:
+        -: 1873:#endif /* _STL_LIST_H */

@@ -1,0 +1,119 @@
+        -:    0:Source:IsPrime2.c++
+        -:    0:Graph:IsPrime2.gcno
+        -:    0:Data:IsPrime2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// ------------
+        -:    2:// IsPrime2.c++
+        -:    3:// ------------
+        -:    4:
+        -:    5:// https://en.wikipedia.org/wiki/Primality_test
+        -:    6:
+        -:    7:#include <cassert>  // assert
+        -:    8:#include <cmath>    // sqrt
+        -:    9:#include <iostream> // cout, endl
+        -:   10:
+        -:   11:using namespace std;
+        -:   12:
+function _Z8is_primei called 9 returned 100% blocks executed 93%
+        9:   13:bool is_prime (int n) {
+        9:   14:    assert(n > 0);
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+call    2 never executed
+        9:   15:    if (n == 2)
+branch  0 taken 11% (fallthrough)
+branch  1 taken 89%
+        1:   16:        return true;
+        8:   17:    if ((n == 1) || ((n % 2) == 0))
+branch  0 taken 88% (fallthrough)
+branch  1 taken 13%
+branch  2 taken 14% (fallthrough)
+branch  3 taken 86%
+        2:   18:        return false;
+        8:   19:    for (int i = 3; i <= std::sqrt(n); i += 2)
+call    0 returned 100%
+branch  1 taken 50% (fallthrough)
+branch  2 taken 50%
+        4:   20:        if ((n % i) == 0)
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        2:   21:            return false;
+        4:   22:    return true;}
+        -:   23:
+function main called 1 returned 100% blocks executed 73%
+        1:   24:int main () {
+        1:   25:    cout << "IsPrime2.c++" << endl;
+call    0 returned 100%
+call    1 returned 100%
+        -:   26:
+        1:   27:    assert(!is_prime( 1));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   28:    assert( is_prime( 2));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   29:    assert( is_prime( 3));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   30:    assert(!is_prime( 4));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   31:    assert( is_prime( 5));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   32:    assert( is_prime( 7));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   33:    assert(!is_prime( 9));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   34:    assert(!is_prime(27));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        1:   35:    assert( is_prime(29));
+call    0 returned 100%
+branch  1 taken 0% (fallthrough)
+branch  2 taken 100%
+call    3 never executed
+        -:   36:
+        1:   37:    cout << "Done." << endl;
+call    0 returned 100%
+call    1 returned 100%
+function _GLOBAL__sub_I__Z8is_primei called 1 returned 100% blocks executed 100%
+function _Z41__static_initialization_and_destruction_0ii called 1 returned 100% blocks executed 100%
+        4:   38:    return 0;}
+call    0 returned 100%
+branch  1 taken 100% (fallthrough)
+branch  2 taken 0%
+branch  3 taken 100% (fallthrough)
+branch  4 taken 0%
+        -:   39:
+        -:   40:/*
+        -:   41:% IsPrime2
+        -:   42:IsPrime2.c++
+        -:   43:Done.
+        -:   44:gcov -b IsPrime2.c++ | grep -A 5 "File 'IsPrime2.c++'"
+        -:   45:File 'IsPrime2.c++'
+        -:   46:Lines executed:100.00% of 21
+        -:   47:Branches executed:100.00% of 30
+        -:   48:Taken at least once:66.67% of 30
+        -:   49:No calls
+        -:   50:IsPrime2.c++:creating 'IsPrime2.c++.gcov'
+        -:   51:*/

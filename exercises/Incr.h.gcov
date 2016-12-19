@@ -1,0 +1,23 @@
+        -:    0:Source:Incr.h
+        -:    0:Graph:Incr.gcno
+        -:    0:Data:Incr.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// --------
+        -:    2:// Incr.c++
+        -:    3:// --------
+        -:    4:
+        -:    5:#ifndef Incr_h
+        -:    6:#define Incr_h
+        -:    7:
+function _Z8pre_incrRi called 3 returned 100% blocks executed 100%
+        3:    8:int& pre_incr (int& r) {
+        3:    9:    return r += 1;}
+        -:   10:
+function _Z9post_incrRi called 1 returned 100% blocks executed 100%
+        1:   11:int post_incr (int& r) {
+        1:   12:    int v = r;
+        1:   13:    r += 1;
+        1:   14:    return v;}
+        -:   15:
+        -:   16:#endif // Incr_h

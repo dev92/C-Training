@@ -1,0 +1,25 @@
+        -:    0:Source:Fill.h
+        -:    0:Graph:Fill.gcno
+        -:    0:Data:Fill.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// ------
+        -:    2:// Fill.h
+        -:    3:// ------
+        -:    4:
+        -:    5:#ifndef Fill_h
+        -:    6:#define Fill_h
+        -:    7:
+        -:    8:template <typename FI, typename T>
+function _Z7my_fillIN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEEiEvT_S7_RKT0_ called 2 returned 100% blocks executed 100%
+        9:    9:void my_fill (FI b, FI e, const T& v) {
+       16:   10:    while (b != e) {
+call    0 returned 100%
+branch  1 taken 78% (fallthrough)
+branch  2 taken 22%
+        7:   11:        *b = v;
+call    0 returned 100%
+        9:   12:        ++b;}}
+call    0 returned 100%
+        -:   13:
+        -:   14:#endif // Fill_h

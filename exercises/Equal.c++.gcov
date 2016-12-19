@@ -1,0 +1,262 @@
+        -:    0:Source:Equal.c++
+        -:    0:Graph:Equal.gcno
+        -:    0:Data:Equal.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:// ---------
+        -:    2:// Equal.c++
+        -:    3:// ---------
+        -:    4:
+        -:    5:// http://en.cppreference.com/w/cpp/algorithm/equal
+        -:    6:
+        -:    7:#include <algorithm>  // equal
+        -:    8:#include <functional> // function
+        -:    9:#include <list>       // list
+        -:   10:#include <vector>     // vector
+        -:   11:
+        -:   12:#include "gtest/gtest.h"
+        -:   13:
+        -:   14:#include "Equal.h"
+        -:   15:
+        -:   16:using namespace std;
+        -:   17:using namespace testing;
+        -:   18:
+        -:   19:using EqualListSignature = function<bool (list<int>::const_iterator, list<int>::const_iterator, vector<int>::const_iterator)>;
+        -:   20:
+function _ZN16EqualListFixtureD0Ev called 0 returned 0% blocks executed 0%
+function _ZN16EqualListFixtureD2Ev called 4 returned 100% blocks executed 75%
+function _ZN16EqualListFixtureC2Ev called 4 returned 100% blocks executed 100%
+        8:   21:struct EqualListFixture : TestWithParam<EqualListSignature>
+call    0 never executed
+call    1 never executed
+call    2 returned 100%
+branch  3 taken 0% (fallthrough)
+branch  4 taken 100%
+call    5 never executed
+call    6 returned 100%
+        -:   22:    {};
+        -:   23:
+function _Z59gtest_EqualListInstantiationEqualListFixture_EvalGenerator_v called 2 returned 100% blocks executed 100%
+        3:   24:INSTANTIATE_TEST_CASE_P(
+call    0 returned 100%
+call    1 returned 100%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0% (throw)
+call    4 returned 100%
+branch  5 taken 100% (fallthrough)
+branch  6 taken 0% (throw)
+call    7 returned 100%
+branch  8 taken 100% (fallthrough)
+branch  9 taken 0% (throw)
+call   10 returned 100%
+branch 11 taken 100% (fallthrough)
+branch 12 taken 0% (throw)
+call   13 returned 100%
+branch 14 taken 100% (fallthrough)
+branch 15 taken 0% (throw)
+call   16 returned 100%
+call   17 returned 100%
+call   18 never executed
+call   19 never executed
+call   20 returned 100%
+call   21 returned 100%
+branch 22 taken 100% (fallthrough)
+branch 23 taken 0% (throw)
+        -:   25:    EqualListInstantiation,
+        -:   26:    EqualListFixture,
+        -:   27:    Values(
+        -:   28:           equal<list<int>::const_iterator, vector<int>::const_iterator>,
+        -:   29:        my_equal<list<int>::const_iterator, vector<int>::const_iterator>));
+        -:   30:
+function _ZN28EqualListFixture_test_1_TestD0Ev called 2 returned 100% blocks executed 100%
+function _ZN28EqualListFixture_test_1_TestD2Ev called 2 returned 100% blocks executed 75%
+function _ZN28EqualListFixture_test_1_Test8TestBodyEv called 2 returned 100% blocks executed 50%
+function _ZN28EqualListFixture_test_1_Test13AddToRegistryEv called 1 returned 100% blocks executed 100%
+function _ZN28EqualListFixture_test_1_TestC2Ev called 2 returned 100% blocks executed 100%
+       10:   31:TEST_P(EqualListFixture, test_1) {
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+call    3 returned 100%
+branch  4 taken 0% (fallthrough)
+branch  5 taken 100%
+call    6 never executed
+call    7 returned 100%
+call    8 returned 100%
+call    9 returned 100%
+call   10 returned 100%
+call   11 returned 100%
+call   12 returned 100%
+call   13 returned 100%
+        4:   32:    const list<int>   x = {2, 3, 4};
+call    0 returned 100%
+call    1 returned 100%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0% (throw)
+call    4 returned 100%
+call    5 never executed
+call    6 never executed
+call    7 never executed
+        4:   33:    const vector<int> y = {0, 2, 3, 4, 0};
+call    0 returned 100%
+call    1 returned 100%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0% (throw)
+call    4 returned 100%
+call    5 returned 100%
+branch  6 taken 100%
+branch  7 taken 0%
+call    8 never executed
+        2:   34:	ASSERT_FALSE(GetParam()(begin(x), end(x), begin(y)));}
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+call    3 returned 100%
+branch  4 taken 100% (fallthrough)
+branch  5 taken 0% (throw)
+call    6 returned 100%
+branch  7 taken 100% (fallthrough)
+branch  8 taken 0% (throw)
+call    9 returned 100%
+branch 10 taken 100% (fallthrough)
+branch 11 taken 0% (throw)
+call   12 returned 100%
+branch 13 taken 0% (fallthrough)
+branch 14 taken 100%
+call   15 never executed
+branch 16 never executed
+branch 17 never executed
+call   18 never executed
+branch 19 never executed
+branch 20 never executed
+call   21 never executed
+call   22 never executed
+branch 23 never executed
+branch 24 never executed
+call   25 never executed
+branch 26 never executed
+branch 27 never executed
+call   28 never executed
+call   29 never executed
+call   30 never executed
+call   31 returned 100%
+branch 32 taken 100%
+branch 33 taken 0%
+call   34 returned 100%
+branch 35 taken 100%
+branch 36 taken 0%
+call   37 never executed
+call   38 never executed
+call   39 never executed
+call   40 never executed
+        -:   35:
+function _ZN28EqualListFixture_test_2_TestD0Ev called 2 returned 100% blocks executed 100%
+function _ZN28EqualListFixture_test_2_TestD2Ev called 2 returned 100% blocks executed 75%
+function _ZN28EqualListFixture_test_2_Test8TestBodyEv called 2 returned 100% blocks executed 50%
+function _ZN28EqualListFixture_test_2_Test13AddToRegistryEv called 1 returned 100% blocks executed 100%
+function _ZN28EqualListFixture_test_2_TestC2Ev called 2 returned 100% blocks executed 100%
+       10:   36:TEST_P(EqualListFixture, test_2) {
+call    0 returned 100%
+call    1 returned 100%
+call    2 returned 100%
+call    3 returned 100%
+branch  4 taken 0% (fallthrough)
+branch  5 taken 100%
+call    6 never executed
+call    7 returned 100%
+call    8 returned 100%
+call    9 returned 100%
+call   10 returned 100%
+call   11 returned 100%
+call   12 returned 100%
+call   13 returned 100%
+        4:   37:    const list<int>   x = {2, 3, 4};
+call    0 returned 100%
+call    1 returned 100%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0% (throw)
+call    4 returned 100%
+call    5 never executed
+call    6 never executed
+call    7 never executed
+        4:   38:    const vector<int> y = {0, 2, 3, 4, 0};
+call    0 returned 100%
+call    1 returned 100%
+branch  2 taken 100% (fallthrough)
+branch  3 taken 0% (throw)
+call    4 returned 100%
+call    5 returned 100%
+branch  6 taken 100%
+branch  7 taken 0%
+call    8 never executed
+function _GLOBAL__sub_I__Z59gtest_EqualListInstantiationEqualListFixture_EvalGenerator_v called 1 returned 100% blocks executed 100%
+function _Z41__static_initialization_and_destruction_0ii called 1 returned 100% blocks executed 85%
+        5:   39:	ASSERT_TRUE(GetParam()(begin(x), end(x), begin(y) + 1));}
+call    0 returned 100%
+branch  1 taken 100% (fallthrough)
+branch  2 taken 0%
+branch  3 taken 100% (fallthrough)
+branch  4 taken 0%
+call    5 returned 100%
+call    6 returned 100%
+call    7 returned 100%
+call    8 returned 100%
+call    9 returned 100%
+branch 10 taken 100% (fallthrough)
+branch 11 taken 0% (throw)
+call   12 returned 100%
+branch 13 taken 100% (fallthrough)
+branch 14 taken 0% (throw)
+call   15 returned 100%
+branch 16 taken 100% (fallthrough)
+branch 17 taken 0% (throw)
+call   18 returned 100%
+branch 19 taken 0% (fallthrough)
+branch 20 taken 100%
+call   21 never executed
+branch 22 never executed
+branch 23 never executed
+call   24 never executed
+branch 25 never executed
+branch 26 never executed
+call   27 never executed
+call   28 never executed
+branch 29 never executed
+branch 30 never executed
+call   31 never executed
+branch 32 never executed
+branch 33 never executed
+call   34 never executed
+call   35 never executed
+call   36 never executed
+call   37 returned 100%
+branch 38 taken 100%
+branch 39 taken 0%
+call   40 returned 100%
+branch 41 taken 100%
+branch 42 taken 0%
+call   43 never executed
+call   44 never executed
+call   45 never executed
+call   46 never executed
+        -:   40:
+        -:   41:/*
+        -:   42:% Equal
+        -:   43:Running main() from gtest_main.cc
+        -:   44:[==========] Running 4 tests from 1 test case.
+        -:   45:[----------] Global test environment set-up.
+        -:   46:[----------] 4 tests from EqualListInstantiation/EqualListFixture
+        -:   47:[ RUN      ] EqualListInstantiation/EqualListFixture.test_1/0
+        -:   48:[       OK ] EqualListInstantiation/EqualListFixture.test_1/0 (0 ms)
+        -:   49:[ RUN      ] EqualListInstantiation/EqualListFixture.test_1/1
+        -:   50:[       OK ] EqualListInstantiation/EqualListFixture.test_1/1 (0 ms)
+        -:   51:[ RUN      ] EqualListInstantiation/EqualListFixture.test_2/0
+        -:   52:[       OK ] EqualListInstantiation/EqualListFixture.test_2/0 (0 ms)
+        -:   53:[ RUN      ] EqualListInstantiation/EqualListFixture.test_2/1
+        -:   54:[       OK ] EqualListInstantiation/EqualListFixture.test_2/1 (0 ms)
+        -:   55:[----------] 4 tests from EqualListInstantiation/EqualListFixture (0 ms total)
+        -:   56:
+        -:   57:[----------] Global test environment tear-down
+        -:   58:[==========] 4 tests from 1 test case ran. (0 ms total)
+        -:   59:[  PASSED  ] 4 tests.
+        -:   60:*/
